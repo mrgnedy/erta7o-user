@@ -7,24 +7,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:erta7o/presentation/ui/mainPage.dart';
+import 'package:erta7o/presentation/ui/mainPage/mainPage.dart';
+import 'package:erta7o/presentation/ui/authPages/authPage.dart';
+import 'package:erta7o/presentation/ui/authPages/verifyPage.dart';
+import 'package:erta7o/presentation/ui/authPages/forget_password.dart';
 import 'package:erta7o/presentation/ui/restaurantDetails/restaurantDetails.dart';
 import 'package:erta7o/presentation/ui/restaurantDetails/menuPage.dart';
-import 'package:erta7o/presentation/ui/restaurantDetails/productDetails.dart';
+import 'package:erta7o/presentation/ui/restaurantDetails/productDetails/productDetails.dart';
 import 'package:erta7o/presentation/widgets/map.dart';
+import 'package:erta7o/presentation/ui/navigationPages/ordersPage/orderDetails.dart';
+import 'package:erta7o/presentation/ui/navigationPages/ordersPage/offers_page.dart';
 
 abstract class Routes {
-  static const mainUserPage = '/';
+  static const mainUserPage = '/main-user-page';
+  static const authPage = '/';
+  static const verifyPage = '/verify-page';
+  static const forgetPassword = '/forget-password';
   static const restaurantDetails = '/restaurant-details';
   static const menuPage = '/menu-page';
   static const productDetailsPage = '/product-details-page';
   static const mapScreen = '/map-screen';
+  static const orderDetailsPage = '/order-details-page';
+  static const offersPage = '/offers-page';
   static const all = {
     mainUserPage,
+    authPage,
+    verifyPage,
+    forgetPassword,
     restaurantDetails,
     menuPage,
     productDetailsPage,
     mapScreen,
+    orderDetailsPage,
+    offersPage,
   };
 }
 
@@ -45,15 +60,29 @@ class Router extends RouterBase {
           builder: (context) => MainUserPage(),
           settings: settings,
         );
-      case Routes.restaurantDetails:
-        if (hasInvalidArgs<RestaurantDetailsArguments>(args)) {
-          return misTypedArgsRoute<RestaurantDetailsArguments>(args);
-        }
-        final typedArgs =
-            args as RestaurantDetailsArguments ?? RestaurantDetailsArguments();
+      case Routes.authPage:
         return MaterialPageRoute<dynamic>(
-          builder: (context) => RestaurantDetails(
-              key: typedArgs.key, restaurantData: typedArgs.restaurantData),
+          builder: (context) => AuthPage(),
+          settings: settings,
+        );
+      case Routes.verifyPage:
+        if (hasInvalidArgs<VerifyPageArguments>(args)) {
+          return misTypedArgsRoute<VerifyPageArguments>(args);
+        }
+        final typedArgs = args as VerifyPageArguments ?? VerifyPageArguments();
+        return MaterialPageRoute<dynamic>(
+          builder: (context) =>
+              VerifyPage(key: typedArgs.key, isForget: typedArgs.isForget),
+          settings: settings,
+        );
+      case Routes.forgetPassword:
+        return MaterialPageRoute<dynamic>(
+          builder: (context) => ForgetPassword(),
+          settings: settings,
+        );
+      case Routes.restaurantDetails:
+        return MaterialPageRoute<dynamic>(
+          builder: (context) => RestaurantDetails(),
           settings: settings,
         );
       case Routes.menuPage:
@@ -67,12 +96,24 @@ class Router extends RouterBase {
           settings: settings,
         );
       case Routes.mapScreen:
-        if (hasInvalidArgs<MapScreenArguments>(args, isRequired: true)) {
-          return misTypedArgsRoute<MapScreenArguments>(args);
-        }
-        final typedArgs = args as MapScreenArguments;
         return MaterialPageRoute<dynamic>(
-          builder: (context) => MapScreen(typedArgs.setLocation),
+          builder: (context) => MapScreen(),
+          settings: settings,
+        );
+      case Routes.orderDetailsPage:
+        if (hasInvalidArgs<OrderDetailsPageArguments>(args)) {
+          return misTypedArgsRoute<OrderDetailsPageArguments>(args);
+        }
+        final typedArgs =
+            args as OrderDetailsPageArguments ?? OrderDetailsPageArguments();
+        return MaterialPageRoute<dynamic>(
+          builder: (context) => OrderDetailsPage(
+              key: typedArgs.key, unConfirmed: typedArgs.unConfirmed),
+          settings: settings,
+        );
+      case Routes.offersPage:
+        return MaterialPageRoute<dynamic>(
+          builder: (context) => OffersPage(),
           settings: settings,
         );
       default:
@@ -85,15 +126,16 @@ class Router extends RouterBase {
 // Arguments holder classes
 // **************************************************************************
 
-//RestaurantDetails arguments holder class
-class RestaurantDetailsArguments {
+//VerifyPage arguments holder class
+class VerifyPageArguments {
   final Key key;
-  final RestaurantData restaurantData;
-  RestaurantDetailsArguments({this.key, this.restaurantData});
+  final bool isForget;
+  VerifyPageArguments({this.key, this.isForget = false});
 }
 
-//MapScreen arguments holder class
-class MapScreenArguments {
-  final Function setLocation;
-  MapScreenArguments({@required this.setLocation});
+//OrderDetailsPage arguments holder class
+class OrderDetailsPageArguments {
+  final Key key;
+  final bool unConfirmed;
+  OrderDetailsPageArguments({this.key, this.unConfirmed});
 }

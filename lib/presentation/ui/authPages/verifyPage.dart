@@ -1,15 +1,24 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:division/division.dart';
 import 'package:erta7o/const/resource.dart';
 import 'package:erta7o/core/utils.dart';
 import 'package:erta7o/generated/locale_keys.g.dart';
+import 'package:erta7o/presentation/state/auth_store.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:states_rebuilder/states_rebuilder.dart';
 import 'package:toast/toast.dart';
 import 'package:easy_localization/easy_localization.dart' as easy;
+import 'package:erta7o/presentation/widgets/waiting_widget.dart';
+
+import '../../router.gr.dart';
 
 class VerifyPage extends StatelessWidget {
+  final bool isForget;
   Size size;
   BuildContext ctx;
+
+  VerifyPage({Key key, this.isForget = false}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
@@ -25,7 +34,7 @@ class VerifyPage extends StatelessWidget {
       heightFactor: 2,
       child: SingleChildScrollView(
         child: Container(
-          height: size.height * 0.5,
+          height: size.height * 0.6,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -35,8 +44,7 @@ class VerifyPage extends StatelessWidget {
               ),
               buildText(),
               buildPinCode(),
-              buildConfirm(),
-              buildResend(),
+              _BuildVerifyActions()
             ],
           ),
         ),
@@ -55,14 +63,32 @@ class VerifyPage extends StatelessWidget {
     );
   }
 
+  onData(c, d) {
+    ExtendedNavigator.rootNavigator
+        .pushNamedAndRemoveUntil(Routes.mainUserPage, (route) => false);
+  }
+
+  onError(c, e) {
+    print(e);
+  }
+
   String code;
+  verify(s) {
+    RM.get<AuthStore>().setState(
+        (s) => isForget ? s.verifyForgetPasowrd() : s.verify(),
+        onData: onData,
+        onError: onError);
+  }
+
   Widget buildPinCode() {
     return Container(
       width: size.width * 0.8,
       margin: EdgeInsets.only(bottom: 20),
       child: PinCodeTextField(
         length: 4,
-        onChanged: (s) => code = s,
+        onChanged: (s) => IN.get<AuthStore>().authModel.verifynumber = s,
+        onCompleted: verify,
+        onSubmitted: verify,
         backgroundColor: Colors.transparent,
         textInputType: TextInputType.number,
         textStyle: TextStyle(color: Colors.white, fontSize: 20),
@@ -75,29 +101,82 @@ class VerifyPage extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget buildConfirm() {
+class _BuildVerifyActions extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return WhenRebuilderOr(
+      builder: (context, model) => _BuildVerifyOnData(),
+      onWaiting: () => WaitingWidget(),
+      observe: () => RM.get<AuthStore>(),
+    );
+  }
+}
+
+class _BuildVerifyOnData extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        _BuildConfirm(),
+        _BuildResend(),
+      ],
+    );
+  }
+}
+
+class _BuildConfirm extends StatelessWidget {
+  onError(c, e) {
+    AlertDialogs.failed(context: c, content: LocaleKeys.verifyError);
+  }
+
+  onData(c, d) {
+    ExtendedNavigator.rootNavigator
+        .pushNamedAndRemoveUntil(Routes.mainUserPage, (route) => false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final style = TxtStyle()
       ..textColor(ColorsD.main)
       ..fontFamily('bein')
-      ..fontSize(18)..fontWeight(FontWeight.normal);
+      ..fontSize(18)
+      ..fontWeight(FontWeight.normal);
     return RaisedButton(
-      onPressed: () {},
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      onPressed: () {
+        RM
+            .get<AuthStore>()
+            .setState((s) => s.verify(), onData: onData, onError: onError);
+      },
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5),
+      ),
       child: Txt(
         LocaleKeys.confirm,
         style: style,
       ),
     );
   }
+}
 
-  Widget buildResend() {
+class _BuildResend extends StatelessWidget {
+  onError(c, e) {
+    print(e);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final style = TxtStyle()
       ..border(bottom: 1.5, color: Colors.white)
       ..textColor(Colors.white)
       ..bold(false)
-      ..fontSize(16)..margin(top:20);
-    final Function onTap = () => Toast.show('wharever', ctx);
+      ..fontSize(16)
+      ..margin(top: 20);
+    final Function onTap = () =>
+        RM.get<AuthStore>().setState((s) => s.resendVerify(), onError: onError);
     return Txt(
       LocaleKeys.resendCode,
       style: style,

@@ -1,7 +1,7 @@
 import 'package:division/division.dart';
 import 'package:flutter/material.dart';
 import 'package:erta7o/core/utils.dart';
-import 'package:easy_localization/easy_localization.dart'as easy;
+import 'package:easy_localization/easy_localization.dart' as easy;
 
 class TetFieldWithTitle extends StatefulWidget {
   final String title;
@@ -14,26 +14,28 @@ class TetFieldWithTitle extends StatefulWidget {
   final double height;
   final bool isPassword;
   final String hint;
+  final Function onChanged;
   final String countryCode;
   // final Function iconCallback;
   final TextEditingController textEditingController;
 
-  TetFieldWithTitle(
-      {Key key,
-      this.title = 'title',
-      this.validator,
-      this.inputType,
-      this.icon,
-      this.isEditable = true,
-      // this.iconCallback,
-      this.isPassword = false,
-      this.textEditingController,
-      this.minLines,
-      this.height = 1.2,
-      this.isVisible = true,
-      this.hint,
-      this.countryCode})
-      : super(key: key);
+  TetFieldWithTitle({
+    Key key,
+    this.title = 'title',
+    this.validator,
+    this.inputType,
+    this.icon,
+    this.isEditable = true,
+    // this.iconCallback,
+    this.isPassword = false,
+    this.textEditingController,
+    this.minLines,
+    this.height = 1.2,
+    this.isVisible = true,
+    this.hint,
+    this.countryCode,
+    this.onChanged,
+  }) : super(key: key);
 
   @override
   _TetFieldWithTitleState createState() => _TetFieldWithTitleState();
@@ -71,15 +73,17 @@ class _TetFieldWithTitleState extends State<TetFieldWithTitle> {
   Widget textFieldWidget(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Directionality(
-      textDirection: context.locale == Locale('ar')? TextDirection.rtl: TextDirection.ltr,
-          child: Container(
+      textDirection: context.locale == Locale('ar')
+          ? TextDirection.rtl
+          : TextDirection.ltr,
+      child: Container(
         width: size.width * 0.7,
         // height: widget.isEditable? size.height / 12 : null,
         child: TextFormField(
           enabled: widget.isEditable,
           minLines: widget.minLines,
           // key: key,
-
+          onChanged: widget.onChanged,
           obscureText: widget.isPassword ? obSecure : false,
           maxLines: widget.isPassword ? 1 : null,
           controller: widget.textEditingController,

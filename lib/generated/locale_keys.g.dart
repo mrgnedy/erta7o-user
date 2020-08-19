@@ -49,5 +49,53 @@ abstract class LocaleKeys {
   static String get chooseTime => 'chooseTime'.tr();
   static String get done => 'done'.tr();
   static String get back => 'back'.tr();
+  static String get inProgress => 'inProgress'.tr();
+  static String get onTheWay => 'onTheWay'.tr();
+  static String get recieved => 'recieved'.tr();
+  static String get notification => 'notification'.tr();
+  static String get orderNumber => 'orderNumber'.tr();
+  static String get language => 'language'.tr();
+  static String get loginAsMandob => 'loginAsMandob'.tr();
+  static String get profile => 'profile'.tr();
+  static String get whoWeAre => 'whoWeAre'.tr();
+  static String get rateApp => 'rateApp'.tr();
+  static String get contactUs => 'contactUs'.tr();
+  static String get howToOrder => 'HowToOrder'.tr();
+  static String get logOut => 'LogOut'.tr();
+  static String get acceptOffer => 'acceptOffer'.tr();
+  static String get yes => 'yes'.tr();
+  static String get no => 'no'.tr();
+  static String get deliveryOffers => 'deliveryOffers'.tr();
+  static String get enterPhone => 'enterPhone'.tr();
+  static String get verify => 'verify'.tr();
+  static String get resend => 'resend'.tr();
+  static String get sendForgetError => 'sendForgetError'.tr();
+  static String get verifyError => 'verifyError'.tr();
+  static String get inactiveError => 'inactiveError'.tr();
+  static String get changePassword => 'changePassword'.tr();
+  static String get newPassowrd => 'newPassowrd'.tr();
+  static String get confrimNewPassword => 'confrimNewPassword'.tr();
+  static String get unidenticalPassword => 'unidenticalPassword'.tr();
+  static String get totalReviews => 'totalReviews'.tr();
+  static String get saturday => 'saturday'.tr();
+  static String get sunday => 'sunday'.tr();
+  static String get monday => 'monday'.tr();
+  static String get tuesday => 'tuesday'.tr();
+  static String get wednesday => 'wednesday'.tr();
+  static String get thursday => 'thursday'.tr();
+  static String get firday => 'firday'.tr();
+  static String get small => 'small'.tr();
+  static String get medium => 'medium'.tr();
+  static String get large => 'large'.tr();
+  static String get combo => 'combo'.tr();
+  static String get addCopoun => 'addCopoun'.tr();
+  static String get wrongCopoun => 'wrongCopoun'.tr();
+  static String get check => 'check'.tr();
+  static String get copounAdded => 'copounAdded'.tr();
+  static String get confrimOrder => 'confrimOrder'.tr();
+  static String get makeDelivered => 'makeDelivered'.tr();
+  static String get rateDelivery => 'rateDelivery'.tr();
+
+  
 
 }

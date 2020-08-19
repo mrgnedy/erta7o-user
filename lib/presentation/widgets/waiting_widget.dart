@@ -10,7 +10,7 @@ class WaitingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: SpinKitFadingCircle(
-        color: color??ColorsD.main,
+        color: color??Colors.white,
 
       ),
     );

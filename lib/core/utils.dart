@@ -7,8 +7,14 @@ import 'package:erta7o/presentation/widgets/waiting_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:easy_localization/easy_localization.dart' as easy;
+// export 'package:easy_localization/easy_localization.dart';
 
 import 'api_utils.dart';
+
+bool isAr(BuildContext context) => context.locale == Locale('ar');
+bool isPortrait(BuildContext context) =>
+    MediaQuery.of(context).orientation == Orientation.portrait;
 
 class ColorsD {
   static Color main = Colors.brown[900];
@@ -19,36 +25,40 @@ class ColorsD {
 
 class StylesD {
   static Size size;
-  static Widget richText({String mainText, String subText, double width, Function onTap}) {
+  static Widget richText(
+      {String mainText,
+      String subText,
+      double width,
+      Function onTap,
+      Locale locale}) {
     return Parent(
       // alignment: Alignment.,
       style: ParentStyle()
-        ..alignment.centerRight()
+        ..alignment.centerLeft()
         ..margin(left: 12)
         ..width(width)
-        ..alignment.center()
-        
-        ,
-        gesture: Gestures()..onTap(onTap),
+        ..alignment.center(),
+      gesture: Gestures()..onTap(onTap),
       child: RichText(
-        textAlign: TextAlign.right,
-        textDirection: TextDirection.rtl,
+        textAlign: locale == Locale('ar') ? TextAlign.right : TextAlign.left,
+        // textDirection: TextDirection.ltr,
         maxLines: 3,
         overflow: TextOverflow.ellipsis,
         text: TextSpan(
-
           children: [
             TextSpan(
                 text: '$mainText ',
                 style: TextStyle(
-                    color: ColorsD.main, fontFamily: 'bein', )),
+                  color: ColorsD.main,
+                  fontFamily: 'bein',
+                )),
             TextSpan(
                 text: '$subText',
                 style: TextStyle(
-                    height: 1.5,
-                    color: ColorsD.main,
-                    fontFamily: 'bein',
-                    )),
+                  height: 1.5,
+                  color: ColorsD.main,
+                  fontFamily: 'bein',
+                )),
           ],
         ),
       ),

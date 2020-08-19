@@ -10,8 +10,7 @@ import 'package:permission_handler/permission_handler.dart';
 // import 'package:tawasool/router.gr.dart';
 
 class MapScreen extends StatefulWidget {
-  final Function setLocation;
-  MapScreen(this.setLocation);
+  
   @override
   _MapScreenState createState() => _MapScreenState();
 }
@@ -65,7 +64,6 @@ class _MapScreenState extends State<MapScreen> {
                   position: LatLng(currentPos.latitude, currentPos.longitude))
             ]);
             print(currentPos.longitude);
-            widget.setLocation(currentPos);
             setState(() {});
           },
           initialCameraPosition: CameraPosition(

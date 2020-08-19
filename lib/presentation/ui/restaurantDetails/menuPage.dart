@@ -1,11 +1,17 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:division/division.dart';
+import 'package:erta7o/core/api_utils.dart';
 import 'package:erta7o/core/utils.dart';
+import 'package:erta7o/data/models/restaurant_model.dart';
 import 'package:erta7o/generated/locale_keys.g.dart';
 import 'package:erta7o/presentation/router.gr.dart';
+import 'package:erta7o/presentation/state/restaurants_store.dart';
 import 'package:flutter/material.dart';
+import 'package:states_rebuilder/states_rebuilder.dart';
 
 class MenuPage extends StatelessWidget {
+  List<Products> get products =>
+      IN.get<RestaurantsStore>().currentRestaurant.data.products;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,9 +30,10 @@ class MenuPage extends StatelessWidget {
           spacing: 10,
           runSpacing: 10,
           children: List.generate(
-            30,
+            products.length,
             (index) {
-              return MenuCard();
+              IN.get<RestaurantsStore>().currentProduct = products[index];
+              return MenuCard(product: products[index]);
             },
           ),
         ),
@@ -36,6 +43,7 @@ class MenuPage extends StatelessWidget {
 
   Widget buildAppBar() {
     return AppBar(
+      elevation: 0,
       centerTitle: true,
       title: Txt(LocaleKeys.menu),
     );
@@ -43,7 +51,10 @@ class MenuPage extends StatelessWidget {
 }
 
 class MenuCard extends StatelessWidget {
+  final Products product;
   Size size;
+
+  MenuCard({Key key, this.product}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
@@ -57,16 +68,22 @@ class MenuCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Image.network(
-              'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80',
+              '${APIs.imageBaseUrl}${product.image}',
               cacheHeight: size.height ~/ 6,
               cacheWidth: size.width ~/ 3,
+              height: size.height / 6,
+              width: size.width / 3,
               fit: BoxFit.cover,
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Txt(
-                'برجر فظيع جدا',
-                style: TxtStyle(),
+              child: Container(
+                height: size.height * 0.05,
+                child: Text(
+                  '${isAr(context) ? product.nameAr : product.nameEn}',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.black),
+                ),
               ),
             ),
             buildOrderBtn()

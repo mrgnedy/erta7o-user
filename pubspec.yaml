@@ -24,7 +24,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   flutter_spinkit: any
-  states_rebuilder: "1.14.0"
+  states_rebuilder: ^2.3.1
   auto_route: any
   font_awesome_flutter: any
   division: any
@@ -59,6 +59,9 @@ dependencies:
     sdk: flutter
   smooth_page_indicator: any
   smooth_star_rating: any
+  steps_indicator: ^1.0.1
+  switches_kit: ^0.0.1  
+  hover_effect: ^0.6.0
   # flutter_local_notifications: any
   # vector_math: any
 
