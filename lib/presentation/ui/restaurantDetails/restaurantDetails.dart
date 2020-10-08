@@ -1,32 +1,34 @@
 import 'package:easy_localization/easy_localization.dart' as e;
 import 'package:auto_route/auto_route.dart';
 import 'package:division/division.dart';
-import 'package:erta7o/core/api_utils.dart';
-import 'package:erta7o/core/utils.dart';
-import 'package:erta7o/data/models/restaurant_model.dart';
-import 'package:erta7o/data/models/user_home_model.dart';
-import 'package:erta7o/generated/locale_keys.g.dart';
-import 'package:erta7o/presentation/state/restaurants_store.dart';
-import 'package:erta7o/presentation/ui/mainPage/mainPage.dart';
-import 'package:erta7o/presentation/ui/restaurantDetails/subWidgets.dart/menu_widget.dart';
-import 'package:erta7o/presentation/widgets/waiting_widget.dart';
+import 'package:request_mandoub/core/api_utils.dart';
+import 'package:request_mandoub/core/utils.dart';
+import 'package:request_mandoub/data/models/restaurant_model.dart';
+import 'package:request_mandoub/data/models/user_home_model.dart';
+import 'package:request_mandoub/generated/locale_keys.g.dart';
+import 'package:request_mandoub/presentation/state/restaurants_store.dart';
+import 'package:request_mandoub/presentation/ui/mainPage/mainPage.dart';
+import 'package:request_mandoub/presentation/ui/restaurantDetails/subWidgets.dart/menu_widget.dart';
+import 'package:request_mandoub/presentation/widgets/waiting_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 import '../../router.gr.dart';
 import 'subWidgets.dart/working_hours.dart';
 
-import 'package:erta7o/presentation/ui/restaurantDetails/subWidgets.dart/sub_widgets.dart';
+import 'package:request_mandoub/presentation/ui/restaurantDetails/subWidgets.dart/sub_widgets.dart';
 
 class RestaurantDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return WhenRebuilderOr<RestaurantsStore>(
-      observe: () => RM.get<RestaurantsStore>(),
-      initState: (_, m) => m.setState((s) => s.getRestaurant()),
-      onWaiting: () => WaitingWidget(),
-      builder: (context, model) => _OnData(),
+    return Scaffold(
+          body: WhenRebuilderOr<RestaurantsStore>(
+        observe: () => RM.get<RestaurantsStore>(),
+        initState: (_, m) => m.setState((s) => s.getRestaurant()),
+        onWaiting: () => WaitingWidget(),
+        builder: (context, model) => _OnData(),
+      ),
     );
   }
 }

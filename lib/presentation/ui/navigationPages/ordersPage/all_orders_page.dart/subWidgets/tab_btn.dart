@@ -1,6 +1,6 @@
 import 'package:division/division.dart';
-import 'package:erta7o/generated/locale_keys.g.dart';
-import 'package:erta7o/presentation/state/order_store.dart';
+import 'package:request_mandoub/generated/locale_keys.g.dart';
+import 'package:request_mandoub/presentation/state/order_store.dart';
 import 'package:flutter/material.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
@@ -20,7 +20,8 @@ class TabBtn extends StatelessWidget {
             label,
             style: TxtStyle()
               ..fontSize(20)
-              ..textColor(Colors.white)
+              
+              ..textColor(index==IN.get<OrderStore>().currentOrderTab? Colors.white: Colors.grey)
               ..textAlign.center(),
           ),
         ),

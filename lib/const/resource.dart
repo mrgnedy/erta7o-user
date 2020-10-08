@@ -35,6 +35,9 @@ class R {
   /// ![preview](file://E:\Proging Stuff\erta7o\assets\images\order-page.png)
   static const String ASSETS_IMAGES_ORDER_PAGE_PNG = 'assets/images/order-page.png';
 
+  /// ![preview](file://E:\Proging Stuff\erta7o\assets\images\profile.png)
+  static const String ASSETS_IMAGES_PROFILE_PNG = 'assets/images/profile.png';
+
   /// ![preview](file://E:\Proging Stuff\erta7o\assets\images\search.png)
   static const String ASSETS_IMAGES_SEARCH_PNG = 'assets/images/search.png';
 

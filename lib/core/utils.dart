@@ -1,13 +1,16 @@
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:division/division.dart';
-import 'package:erta7o/presentation/widgets/waiting_widget.dart';
+import 'package:request_mandoub/generated/locale_keys.g.dart';
+import 'package:request_mandoub/presentation/widgets/waiting_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:easy_localization/easy_localization.dart' as easy;
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 // export 'package:easy_localization/easy_localization.dart';
 
 import 'api_utils.dart';
@@ -17,7 +20,7 @@ bool isPortrait(BuildContext context) =>
     MediaQuery.of(context).orientation == Orientation.portrait;
 
 class ColorsD {
-  static Color main = Colors.brown[900];
+  static Color main = Color(0xff400505);
   static Color eventDetailsColor = Colors.lightBlue;
   static Color backGroundColor = Colors.grey[300];
   static Color elevationColor = Colors.grey;
@@ -27,10 +30,13 @@ class StylesD {
   static Size size;
   static Widget richText(
       {String mainText,
+      Color color,
       String subText,
       double width,
+      double fontSize = 16,
       Function onTap,
       Locale locale}) {
+    color = color ?? ColorsD.main;
     return Parent(
       // alignment: Alignment.,
       style: ParentStyle()
@@ -47,18 +53,21 @@ class StylesD {
         text: TextSpan(
           children: [
             TextSpan(
-                text: '$mainText ',
+                text: '$mainText: ',
                 style: TextStyle(
-                  color: ColorsD.main,
+                  fontSize: fontSize,
+                  color: color,
                   fontFamily: 'bein',
                 )),
             TextSpan(
-                text: '$subText',
-                style: TextStyle(
-                  height: 1.5,
-                  color: ColorsD.main,
-                  fontFamily: 'bein',
-                )),
+              text: '$subText',
+              style: TextStyle(
+                height: 1.5,
+                fontSize: fontSize,
+                color: color,
+                fontFamily: 'bein',
+              ),
+            ),
           ],
         ),
       ),
@@ -204,7 +213,10 @@ class StylesD {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
-                          Txt('الكاميرا'),
+                          Txt(
+                            'الكاميرا',
+                            style: TxtStyle()..textColor(ColorsD.main),
+                          ),
                           SizedBox(
                             width: 12,
                           ),
@@ -228,7 +240,10 @@ class StylesD {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
-                          Txt('الاستوديو'),
+                          Txt(
+                            'الاستوديو',
+                            style: TxtStyle()..textColor(ColorsD.main),
+                          ),
                           SizedBox(
                             width: 12,
                           ),
@@ -320,6 +335,85 @@ class StylesD {
       borderRadius: BorderRadius.circular(20),
     ),
   );
+
+  static rateDelivery(context, Function confirmRate) {
+    final size = MediaQuery.of(context).size;
+    num rate;
+    final doneStyle = TxtStyle()
+      ..textColor(Colors.white)
+      ..borderRadius(all: 5)
+      ..background.color(ColorsD.main)
+      ..width(100)
+      ..width(size.width * 0.15)
+      ..alignmentContent.center()
+      ..border(color: ColorsD.main);
+    final cancelStyle = TxtStyle()
+      ..width(size.width * 0.15)
+      ..alignmentContent.center()
+      ..border(color: ColorsD.main, all: 1)
+      ..textColor(ColorsD.main)
+      ..borderRadius(all: 5)
+      ..background.color(Colors.white);
+    final backGesture = Gestures()
+      ..onTap(
+        () {
+          ExtendedNavigator.rootNavigator.pop();
+        },
+      );
+    final doneGesture = Gestures()
+      ..onTap(
+        () {
+          print('object');
+          confirmRate(rate);
+          ExtendedNavigator.rootNavigator.pop();
+        },
+      );
+    return showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        child: Container(
+          height: size.height / 5,
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Txt(
+                  LocaleKeys.rateDelivery,
+                  style: TxtStyle(),
+                ),
+                SmoothStarRating(
+                  starCount: 5,
+                  color: Colors.amber,
+                  borderColor: Colors.amber,
+                  onRated: (r) => rate = r,
+                ),
+                SizedBox(height: size.height * 0.024),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Txt(
+                      LocaleKeys.back,
+                      style: cancelStyle,
+                      gesture: backGesture,
+                    ),
+                    SizedBox(
+                      width: size.width * 0.051,
+                    ),
+                    Txt(
+                      LocaleKeys.done,
+                      style: doneStyle,
+                      gesture: doneGesture,
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class Assets {

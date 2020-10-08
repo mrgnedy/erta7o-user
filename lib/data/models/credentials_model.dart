@@ -100,10 +100,10 @@ class Credential {
   Map<String, dynamic> register() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['name'] = this.name;
-    data['phone'] = this.phone;
-    data['lat'] = this.lat;
-    data['lng'] = this.lng;
-    data['address'] = this.address;
+    data['phone'] = "+966${this.phone}";
+    // data['lat'] = this.lat;
+    // data['lng'] = this.lng;
+    // data['address'] = this.address;
     data['password'] = this.password;
     data['google_token'] = this.googleToken?? "r";
     return data;
@@ -111,7 +111,7 @@ class Credential {
 
   Map<String, dynamic> login() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['phone'] = this.phone;
+    data['phone'] = "+966${this.phone}";
     data['password'] = this.password;
     data['google_token'] = this.googleToken?? "d";
     return data;

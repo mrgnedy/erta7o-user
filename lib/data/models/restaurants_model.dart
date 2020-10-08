@@ -1,4 +1,4 @@
-import 'package:erta7o/data/models/user_home_model.dart';
+import 'package:request_mandoub/data/models/user_home_model.dart';
 
 class RestaurantsModel {
   String msg;

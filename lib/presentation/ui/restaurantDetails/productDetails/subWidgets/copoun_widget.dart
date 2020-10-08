@@ -1,10 +1,10 @@
 import 'package:division/division.dart';
-import 'package:erta7o/core/utils.dart';
-import 'package:erta7o/generated/locale_keys.g.dart';
-import 'package:erta7o/presentation/state/order_store.dart';
-import 'package:erta7o/presentation/state/restaurants_store.dart';
-import 'package:erta7o/presentation/widgets/tet_field_with_title.dart';
-import 'package:erta7o/presentation/widgets/waiting_widget.dart';
+import 'package:request_mandoub/core/utils.dart';
+import 'package:request_mandoub/generated/locale_keys.g.dart';
+import 'package:request_mandoub/presentation/state/order_store.dart';
+import 'package:request_mandoub/presentation/state/restaurants_store.dart';
+import 'package:request_mandoub/presentation/widgets/tet_field_with_title.dart';
+import 'package:request_mandoub/presentation/widgets/waiting_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 

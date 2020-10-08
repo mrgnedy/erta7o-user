@@ -1,15 +1,15 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:division/division.dart';
-import 'package:erta7o/const/resource.dart';
-import 'package:erta7o/core/utils.dart';
-import 'package:erta7o/generated/locale_keys.g.dart';
-import 'package:erta7o/presentation/state/auth_store.dart';
+import 'package:request_mandoub/const/resource.dart';
+import 'package:request_mandoub/core/utils.dart';
+import 'package:request_mandoub/generated/locale_keys.g.dart';
+import 'package:request_mandoub/presentation/state/auth_store.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 import 'package:toast/toast.dart';
 import 'package:easy_localization/easy_localization.dart' as easy;
-import 'package:erta7o/presentation/widgets/waiting_widget.dart';
+import 'package:request_mandoub/presentation/widgets/waiting_widget.dart';
 
 import '../../router.gr.dart';
 
@@ -40,7 +40,7 @@ class VerifyPage extends StatelessWidget {
             children: [
               Image.asset(
                 R.ASSETS_IMAGES_LOGO_PNG,
-                color: Colors.white,
+                // color: Colors.white,
               ),
               buildText(),
               buildPinCode(),
@@ -64,8 +64,12 @@ class VerifyPage extends StatelessWidget {
   }
 
   onData(c, d) {
-    ExtendedNavigator.rootNavigator
-        .pushNamedAndRemoveUntil(Routes.mainUserPage, (route) => false);
+    if (isForget)
+      ExtendedNavigator.rootNavigator
+          .pushNamedAndRemoveUntil(Routes.rechangePWPage, (route) => false);
+    else
+      ExtendedNavigator.rootNavigator
+          .pushNamedAndRemoveUntil(Routes.splashScreen, (route) => false);
   }
 
   onError(c, e) {
@@ -82,7 +86,7 @@ class VerifyPage extends StatelessWidget {
 
   Widget buildPinCode() {
     return Container(
-      width: size.width * 0.8,
+      width: size.width * 0.55,
       margin: EdgeInsets.only(bottom: 20),
       child: PinCodeTextField(
         length: 4,
@@ -135,7 +139,7 @@ class _BuildConfirm extends StatelessWidget {
 
   onData(c, d) {
     ExtendedNavigator.rootNavigator
-        .pushNamedAndRemoveUntil(Routes.mainUserPage, (route) => false);
+        .pushNamedAndRemoveUntil(Routes.splashScreen, (route) => false);
   }
 
   @override

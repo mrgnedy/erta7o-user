@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:erta7o/core/utils.dart';
+import 'package:request_mandoub/core/utils.dart';
 
 class WaitingWidget extends StatelessWidget {
   final Color color;

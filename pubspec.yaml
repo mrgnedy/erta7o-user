@@ -1,4 +1,4 @@
-name: erta7o
+name: request_mandoub
 description: A new Flutter project.
 
 # The following defines the version and build number for your application.
@@ -11,7 +11,7 @@ description: A new Flutter project.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 1.0.3+4
 
 environment:
   sdk: ">=2.2.2 <3.0.0"
@@ -62,6 +62,11 @@ dependencies:
   steps_indicator: ^1.0.1
   switches_kit: ^0.0.1  
   hover_effect: ^0.6.0
+  app_review: ^2.0.1
+  flushbar: ^1.10.4
+  flutter_ringtone_player: ^2.0.0
+  device_preview: ^0.4.8
+  path_provider:  
   # flutter_local_notifications: any
   # vector_math: any
 
@@ -74,8 +79,9 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path_android: "assets/logo.png"
-  image_path_ios: "assets/logo_ios.png"
+  image_path_android: "logo.png"
+  image_path_ios: "logo_ios.png"
+  
 
 
 # For information on the generic Dart part of this file, see the

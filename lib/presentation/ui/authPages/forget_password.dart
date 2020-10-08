@@ -2,8 +2,8 @@
 
 // import 'package:auto_route/auto_route.dart';
 // import 'package:division/division.dart';
-// import 'package:erta7o/const/resource.dart';
-// import 'package:erta7o/presentation/state/auth_store.dart';
+// import 'package:request_mandoub/const/resource.dart';
+// import 'package:request_mandoub/presentation/state/auth_store.dart';
 // import 'package:flutter/material.dart';
 // import 'package:mahkama/const/resource.dart';
 // import 'package:mahkama/presentation/store/auth_store.dart';
@@ -128,14 +128,14 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart' as s;
 
 import 'package:division/division.dart';
-import 'package:erta7o/const/resource.dart';
-import 'package:erta7o/core/utils.dart';
-import 'package:erta7o/generated/locale_keys.g.dart';
-import 'package:erta7o/presentation/router.gr.dart';
-import 'package:erta7o/presentation/state/auth_store.dart';
-import 'package:erta7o/presentation/ui/authPages/subWidgets/text_fields.dart';
-import 'package:erta7o/presentation/widgets/tet_field_with_title.dart';
-import 'package:erta7o/presentation/widgets/waiting_widget.dart';
+import 'package:request_mandoub/const/resource.dart';
+import 'package:request_mandoub/core/utils.dart';
+import 'package:request_mandoub/generated/locale_keys.g.dart';
+import 'package:request_mandoub/presentation/router.gr.dart';
+import 'package:request_mandoub/presentation/state/auth_store.dart';
+import 'package:request_mandoub/presentation/ui/authPages/subWidgets/text_fields.dart';
+import 'package:request_mandoub/presentation/widgets/tet_field_with_title.dart';
+import 'package:request_mandoub/presentation/widgets/waiting_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 

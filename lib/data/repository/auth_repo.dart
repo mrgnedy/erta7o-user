@@ -1,4 +1,4 @@
-import 'package:erta7o/core/api_utils.dart';
+import 'package:request_mandoub/core/api_utils.dart';
 
 class AuthRepo {
   Future registerUser(Map<String, dynamic> body) async {
@@ -44,6 +44,7 @@ class AuthRepo {
     Map<String, dynamic> body = {'phone': phone};
     return await APIs.postRequest(url, body);
   }
+
   Future editPhone(String phone) async {
     String url = APIs.editDeliveryProfileEP;
     Map<String, dynamic> body = {'phone': phone};
@@ -60,8 +61,18 @@ class AuthRepo {
   }
 
   Future updateNotify(notifStatus) async {
-    String url = APIs.updateNotifyEP;
+    String url = APIs.updatenotifyEP;
     Map<String, dynamic> body = {'updatenotify': "$notifStatus"};
+    return await APIs.postRequest(url, body);
+  }
+
+  Future updateLocation(lat, long, address) async {
+    String url = APIs.updatelocationEP;
+    Map<String, dynamic> body = {
+      'lat': "$lat",
+      "lng": "$long",
+      "address": "$address"
+    };
     return await APIs.postRequest(url, body);
   }
 }

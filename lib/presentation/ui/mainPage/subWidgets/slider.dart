@@ -1,10 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:division/division.dart';
-import 'package:erta7o/core/api_utils.dart';
-import 'package:erta7o/data/models/user_home_model.dart';
-import 'package:erta7o/presentation/state/restaurants_store.dart';
-import 'package:erta7o/presentation/widgets/error_widget.dart';
-import 'package:erta7o/presentation/widgets/waiting_widget.dart';
+import 'package:request_mandoub/core/api_utils.dart';
+import 'package:request_mandoub/data/models/user_home_model.dart';
+import 'package:request_mandoub/presentation/state/restaurants_store.dart';
+import 'package:request_mandoub/presentation/widgets/error_widget.dart';
+import 'package:request_mandoub/presentation/widgets/waiting_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 

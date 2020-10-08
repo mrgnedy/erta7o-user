@@ -1,4 +1,4 @@
-import 'package:erta7o/core/api_utils.dart';
+import 'package:request_mandoub/core/api_utils.dart';
 
 class OrderRepo{
    Future makeOrder(Map<String, dynamic> body) async {
@@ -40,6 +40,11 @@ class OrderRepo{
   }
   Future showOrderByID(orderID) async {
     String url = APIs.showOrderEP;
+    Map<String, dynamic> body = {'order_id': '$orderID'};
+    return await APIs.postRequest(url, body);
+  }
+  Future deleteOrder(orderID) async {
+    String url = APIs.delOrderEP;
     Map<String, dynamic> body = {'order_id': '$orderID'};
     return await APIs.postRequest(url, body);
   }

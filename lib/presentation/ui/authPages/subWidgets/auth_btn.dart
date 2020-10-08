@@ -1,9 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:division/division.dart';
-import 'package:erta7o/core/utils.dart';
-import 'package:erta7o/generated/locale_keys.g.dart';
-import 'package:erta7o/presentation/state/auth_store.dart';
-import 'package:erta7o/presentation/widgets/waiting_widget.dart';
+import 'package:request_mandoub/core/utils.dart';
+import 'package:request_mandoub/generated/locale_keys.g.dart';
+import 'package:request_mandoub/presentation/state/auth_store.dart';
+import 'package:request_mandoub/presentation/widgets/waiting_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
@@ -13,7 +13,7 @@ class BuildAuthAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WhenRebuilderOr(
-      rmKey: IN.get<AuthStore>().registerKey,
+      // rmKey: IN.get<AuthStore>().registerKey,
       observe: () => RM.get<AuthStore>(),
       builder: (context, model) => _OnData(),
       onWaiting: () => WaitingWidget(color: Colors.white),
@@ -29,12 +29,17 @@ class _OnData extends StatelessWidget {
 
   // final navigateToForget = Gestures()..onTap(() =>ExtendedNavigator.rootNavigator.pushNamed(Routes.forget));
   bool get isCreate => IN.get<AuthStore>().authMode == AuthMode.register;
+  final gesture = Gestures()
+    ..onTap(() {
+      ExtendedNavigator.rootNavigator.pushNamed(Routes.forgetPassword);
+    });
   Widget buildAuthAction() {
     return Column(
       children: [
         isCreate ? buildRegister() : buildLogin(),
-        Txt(LocaleKeys.forgotPassowrd),
+        Txt(LocaleKeys.forgotPassowrd, gesture: gesture),
         StylesD.richText(
+          color: Colors.white,
           mainText: isCreate ? LocaleKeys.haveAccount : LocaleKeys.noAccount,
           subText: isCreate ? LocaleKeys.loginNow : LocaleKeys.registerNow,
           onTap: () => RM.get<AuthStore>().setState(
@@ -50,10 +55,14 @@ class _OnData extends StatelessWidget {
     ..fontSize(18)
     ..fontWeight(FontWeight.normal);
 
-  onRegisterData(c, d) =>
-      ExtendedNavigator.rootNavigator.pushNamed(Routes.verifyPage);
-  onLoginData(c, d) =>
-      ExtendedNavigator.rootNavigator.pushNamed(Routes.mainUserPage);
+  onRegisterData(c, d) {
+    // RM.get<AuthStore>().refresh();
+    ExtendedNavigator.rootNavigator.pushNamed(Routes.verifyPage);
+  }
+
+  onLoginData(c, d) { 
+    ExtendedNavigator.rootNavigator
+      .pushNamedAndRemoveUntil(Routes.splashScreen, (route) => false);}
 
   onLogInError(c, e) {
     if (e.toString().contains('activ'))
@@ -75,7 +84,7 @@ class _OnData extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       onPressed: () {
         // if (!IN.get<AuthStore>().authFormKey.currentState.validate()) return;
-        IN.get<AuthStore>().registerKey.setState((s) => s.register(),
+        RM.get<AuthStore>().setState((s) => s.register(),
             onData: onRegisterData, onError: onRegError);
       },
     );
@@ -93,8 +102,10 @@ class _OnData extends StatelessWidget {
           onPressed: () {
             // if (!IN.get<AuthStore>().authFormKey.currentState.validate())
             //   return;
-            IN.get<AuthStore>().registerKey.setState((s) => s.login(),
-                onData: onLoginData, onError: onLogInError);
+            RM.get<AuthStore>().setState(
+                  (s) => s.login(),
+                  onData: onLoginData,
+                );
           },
         ),
       ],

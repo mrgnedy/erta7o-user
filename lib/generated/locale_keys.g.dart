@@ -1,7 +1,7 @@
+import 'package:easy_localization/easy_localization.dart' as e;
 // DO NOT EDIT. This is code generated via package:easy_localization/generate.dart
-import 'package:easy_localization/easy_localization.dart';
 
-abstract class LocaleKeys {
+abstract class  LocaleKeys {
   static String get main => 'main'.tr();
   static String get register => 'register'.tr();
   static String get userName => 'userName'.tr();
@@ -43,6 +43,7 @@ abstract class LocaleKeys {
   static String get addMoreOrders => 'addMoreOrders'.tr();
   static String get completeOrder => 'completeOrder'.tr();
   static String get sandwitchType => 'sandwitchType'.tr();
+  static String get sandwitchName => 'sandwitchName'.tr();
   static String get qty => 'qty'.tr();
   static String get orderDetails => 'orderDetails'.tr();
   static String get additions => 'additions'.tr();
@@ -60,8 +61,8 @@ abstract class LocaleKeys {
   static String get whoWeAre => 'whoWeAre'.tr();
   static String get rateApp => 'rateApp'.tr();
   static String get contactUs => 'contactUs'.tr();
-  static String get howToOrder => 'HowToOrder'.tr();
-  static String get logOut => 'LogOut'.tr();
+  static String get HowToOrder => 'HowToOrder'.tr();
+  static String get LogOut => 'LogOut'.tr();
   static String get acceptOffer => 'acceptOffer'.tr();
   static String get yes => 'yes'.tr();
   static String get no => 'no'.tr();
@@ -95,7 +96,28 @@ abstract class LocaleKeys {
   static String get confrimOrder => 'confrimOrder'.tr();
   static String get makeDelivered => 'makeDelivered'.tr();
   static String get rateDelivery => 'rateDelivery'.tr();
-
+  static String get address => 'address'.tr();
+  static String get totalPrice => 'totalPrice'.tr();
+  static String get deliveryName => 'deliveryName'.tr();
+  static String get restaurantName => 'restaurantName'.tr();
+  static const deliverRequest = 'deliverRequest';
+  static String get policy => 'policy'.tr();
+  static String get termsOfUse => 'termsOfUse'.tr();
+  static String get name => 'name'.tr();
+  static String get leaveMsg => 'leaveMsg'.tr();
+  static String get send => 'send'.tr();
+  static String get noNotification => 'noNotification'.tr();
+  static const  noOrders = 'noOrders';
+  static String get cantOrderRegister => 'cantOrderRegister'.tr();
+  static String get kg => 'kg'.tr();
   
+  static String get waitingOrder => 'waitingOrder'.tr();
+  static String get mandobSelected => 'mandobSelected'.tr();
+  
+  static String get notFound => 'notFound'.tr();
+  static String get hour => 'hour'.tr();
+  static const priceTag = 'priceTag';
+  static String get notChosen => 'notChosen'.tr();
+  static String get noOffers => 'noOffers'.tr();
 
 }

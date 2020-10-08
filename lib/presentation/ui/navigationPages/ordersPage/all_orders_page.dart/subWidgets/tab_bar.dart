@@ -1,5 +1,5 @@
-import 'package:erta7o/generated/locale_keys.g.dart';
-import 'package:erta7o/presentation/ui/navigationPages/ordersPage/all_orders_page.dart/subWidgets/tab_btn.dart';
+import 'package:request_mandoub/generated/locale_keys.g.dart';
+import 'package:request_mandoub/presentation/ui/navigationPages/ordersPage/all_orders_page.dart/subWidgets/tab_btn.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

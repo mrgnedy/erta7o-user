@@ -1,5 +1,6 @@
-import 'package:erta7o/core/utils.dart';
-import 'package:erta7o/presentation/state/order_store.dart';
+import 'package:request_mandoub/core/utils.dart';
+import 'package:request_mandoub/generated/locale_keys.g.dart';
+import 'package:request_mandoub/presentation/state/order_store.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart' as e;
 import 'package:states_rebuilder/states_rebuilder.dart';
@@ -7,14 +8,14 @@ import 'package:steps_indicator/steps_indicator.dart';
 
 class BuildProgress extends StatelessWidget {
   List statusList = [
-    "فى انتظار العروض",
-    "تم اختيار المندوب",
-    "قيد التنفيذ",
-    "فى الطريق اليك",
-    "تم التسليم",
+    LocaleKeys.waitingOrder,
+    LocaleKeys.mandobSelected,
+    LocaleKeys.inProgress,
+    LocaleKeys.onTheWay,
+    LocaleKeys.recieved,
   ];
 
-  int get status => null;//int.tryParse(IN.get<OrderStore>().currentOrder?.data?.first?.order?.status);
+  int get status => !IN.get<OrderStore>().isConfirmed || IN.get<OrderStore>().currentOrder?.data?.first?.order?.status==null? null: int.tryParse(IN.get<OrderStore>().currentOrder?.data?.first?.order?.status);
   int get selectedStep =>
       status != null ? status + 1 : !IN.get<OrderStore>().isConfirmed ? 0 : 1;
   @override

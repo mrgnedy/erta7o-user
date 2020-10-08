@@ -1,13 +1,15 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:division/division.dart';
 import 'package:easy_localization/easy_localization.dart' as e;
-import 'package:erta7o/presentation/widgets/waiting_widget.dart';
+import 'package:request_mandoub/data/models/order_byid_model.dart';
+import 'package:request_mandoub/presentation/ui/navigationPages/ordersPage/subWidgets/build_order_detail.dart';
+import 'package:request_mandoub/presentation/widgets/waiting_widget.dart';
 
-import 'package:erta7o/core/utils.dart';
-import 'package:erta7o/generated/locale_keys.g.dart';
-import 'package:erta7o/presentation/state/order_store.dart';
-import 'package:erta7o/presentation/ui/navigationPages/ordersPage/subWidgets/build_progress.dart';
-import 'package:erta7o/presentation/ui/navigationPages/ordersPage/subWidgets/order_actions.dart';
+import 'package:request_mandoub/core/utils.dart';  
+import 'package:request_mandoub/generated/locale_keys.g.dart';
+import 'package:request_mandoub/presentation/state/order_store.dart';
+import 'package:request_mandoub/presentation/ui/navigationPages/ordersPage/subWidgets/build_progress.dart';
+import 'package:request_mandoub/presentation/ui/navigationPages/ordersPage/subWidgets/order_actions.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
@@ -34,9 +36,11 @@ class OrderDetailsPage extends StatelessWidget {
           elevation: 0,
         ),
         body: WhenRebuilderOr<OrderStore>(
-          initState: (c, rm) => rm.setState((s) => s.showOrderByid()),
+          initState: (c, rm) =>rm.state.isConfirmed? rm.setState((s) => s.showOrderByid()): rm.resetToIdle(),
           observe: () => RM.get<OrderStore>(),
+          dispose: (c,m ) =>m.state.currentOrder = OrderByIdModel() ,
           builder: (context, model) => _OnData(),
+          // watch: (model) => model.state.currentOrder,
           onWaiting: () => WaitingWidget(),
         ),
       ),
@@ -45,19 +49,16 @@ class OrderDetailsPage extends StatelessWidget {
 }
 
 class _OnData extends StatelessWidget {
-  Size size;
   @override
   Widget build(BuildContext context) {
-  
-    size = MediaQuery.of(context).size;
+    e.printInfo(IN.get<OrderStore>().currentOrder.data.first.toJson().toString());
     return SingleChildScrollView(
       child: Center(
         heightFactor: 1.2,
         child: Column(
           children: <Widget>[
             BuildProgress(),
-            buildOrderDetails(context),
-            buildAddressDetails(context),
+            BuildOrderDetaild(),
             BuildOrderActions()
           ],
         ),
@@ -65,120 +66,4 @@ class _OnData extends StatelessWidget {
     );
   }
 
-  Widget buildOrderDetails(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Card(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            StylesD.richText(
-                mainText: LocaleKeys.qty,
-                locale: context.locale,
-                subText: 'LocaleKeys',
-                width: size.width),
-            StylesD.richText(
-                mainText: LocaleKeys.sandwitchType,
-                locale: context.locale,
-                subText: 'LocaleKeys',
-                width: size.width),
-            StylesD.richText(
-                mainText: LocaleKeys.additions,
-                locale: context.locale,
-                subText: 'LocaleKeys',
-                width: size.width),
-            StylesD.richText(
-                mainText: LocaleKeys.qty,
-                locale: context.locale,
-                subText: 'LocaleKeys',
-                width: size.width),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget buildAddressDetails(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Card(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            StylesD.richText(
-                width: size.width,
-                locale: context.locale,
-                mainText: LocaleKeys.qty,
-                subText: 'LocaleKeys'),
-            StylesD.richText(
-                width: size.width,
-                locale: context.locale,
-                mainText: LocaleKeys.qty,
-                subText: 'LocaleKeys'),
-            StylesD.richText(
-                width: size.width,
-                mainText: LocaleKeys.qty,
-                locale: context.locale,
-                subText: 'LocaleKeys'),
-            StylesD.richText(
-                width: size.width,
-                locale: context.locale,
-                mainText: LocaleKeys.qty,
-                subText: 'LocaleKeys'),
-            StylesD.richText(
-                width: size.width,
-                locale: context.locale,
-                mainText: LocaleKeys.qty,
-                subText: 'LocaleKeys'),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget buildRate(context) {
-    final style = TxtStyle()
-      ..alignmentContent.center()
-      ..borderRadius(all: 12)
-      ..textColor(ColorsD.main)
-      ..background.color(Colors.white)
-      ..height(isPortrait(context) ? size.height / 16 : size.height / 8)
-      ..width(isPortrait(context) ? size.width * 0.4 : size.width * 0.2);
-    final gesure = Gestures()..onTap(() => showRateDialoge(context));
-    return Txt('تقييم المندوب', style: style, gesture: gesure);
-  }
-
-  double rate = 0;
-  getRate(r) => rate = r;
-  showRateDialoge(context) async {
-    final style = TxtStyle()..textColor(ColorsD.main);
-    return await showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: Container(
-          height: size.height / 4,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Txt('قيم المندوب', style: style),
-              Divider(color: ColorsD.main, endIndent: 10, indent: 10),
-              Directionality(
-                textDirection: TextDirection.ltr,
-                child: SmoothStarRating(
-                    onRated: getRate,
-                    rating: rate,
-                    starCount: 5,
-                    color: Colors.amber,
-                    borderColor: Colors.amber),
-              ),
-              Txt('ارساال', style: style)
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }

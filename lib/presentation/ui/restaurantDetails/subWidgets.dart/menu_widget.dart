@@ -1,9 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:division/division.dart';
-import 'package:erta7o/core/api_utils.dart';
-import 'package:erta7o/data/models/restaurant_model.dart';
-import 'package:erta7o/generated/locale_keys.g.dart';
-import 'package:erta7o/presentation/state/restaurants_store.dart';
+import 'package:request_mandoub/core/api_utils.dart';
+import 'package:request_mandoub/data/models/restaurant_model.dart';
+import 'package:request_mandoub/generated/locale_keys.g.dart';
+import 'package:request_mandoub/presentation/state/restaurants_store.dart';
 import 'package:flutter/material.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 

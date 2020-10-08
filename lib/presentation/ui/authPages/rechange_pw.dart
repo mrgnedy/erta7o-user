@@ -1,9 +1,9 @@
 // import 'package:auto_route/auto_route.dart';
 // import 'package:division/division.dart';
-// import 'package:erta7o/core/utils.dart';
-// import 'package:erta7o/presentation/state/auth_store.dart';
-// import 'package:erta7o/presentation/widgets/tet_field_with_title.dart';
-// import 'package:erta7o/presentation/widgets/waiting_widget.dart';
+// import 'package:request_mandoub/core/utils.dart';
+// import 'package:request_mandoub/presentation/state/auth_store.dart';
+// import 'package:request_mandoub/presentation/widgets/tet_field_with_title.dart';
+// import 'package:request_mandoub/presentation/widgets/waiting_widget.dart';
 // import 'package:flutter/material.dart';
 // import 'package:states_rebuilder/states_rebuilder.dart';
 
@@ -109,15 +109,18 @@
 //   }
 // }
 
+import 'package:auto_route/auto_route.dart';
 import 'package:division/division.dart';
-import 'package:erta7o/const/resource.dart';
-import 'package:erta7o/core/utils.dart';
-import 'package:erta7o/generated/locale_keys.g.dart';
-import 'package:erta7o/presentation/state/auth_store.dart';
-import 'package:erta7o/presentation/ui/authPages/subWidgets/text_fields.dart';
-import 'package:erta7o/presentation/widgets/waiting_widget.dart';
+import 'package:request_mandoub/const/resource.dart';
+import 'package:request_mandoub/core/utils.dart';
+import 'package:request_mandoub/generated/locale_keys.g.dart';
+import 'package:request_mandoub/presentation/state/auth_store.dart';
+import 'package:request_mandoub/presentation/ui/authPages/subWidgets/text_fields.dart';
+import 'package:request_mandoub/presentation/widgets/waiting_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
+
+import '../../router.gr.dart';
 
 class RechangePWPage extends StatelessWidget {
   @override
@@ -167,12 +170,13 @@ class _BuildBody extends StatelessWidget {
 }
 
 class _EnterBtn extends StatelessWidget {
-  Size get size => RM.mediaQuery.size;
+  Size size;
   @override
   Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
     return WhenRebuilderOr(
       builder: (context, model) => _editBtn(),
-    onWaiting: ()=>WaitingWidget(),
+      onWaiting: () => WaitingWidget(),
       observe: () => RM.get<AuthStore>(),
     );
   }
@@ -182,6 +186,7 @@ class _EnterBtn extends StatelessWidget {
       ..width(size.width * 0.4)
       ..height(size.height / 16)
       ..background.color(Colors.white)
+      ..alignmentContent.center()
       ..textColor(ColorsD.main)
       ..borderRadius(all: 5);
     final gesture = Gestures()
@@ -191,7 +196,13 @@ class _EnterBtn extends StatelessWidget {
           RM.show((c) => AlertDialogs.failed(
               context: c, content: LocaleKeys.unidenticalPassword));
         else
-          RM.get<AuthStore>().setState((s) => s.rechangePassowrd());
+          RM.get<AuthStore>().setState(
+                (s) => s.rechangePassowrd(),
+                onError: (context, error) => print(error),
+                onData: (context, model) => ExtendedNavigator.rootNavigator
+                    .pushNamedAndRemoveUntil(
+                        Routes.splashScreen, (route) => false),
+              );
       });
     return Txt(LocaleKeys.signin, style: style, gesture: gesture);
   }

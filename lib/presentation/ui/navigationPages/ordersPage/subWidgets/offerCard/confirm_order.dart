@@ -1,8 +1,9 @@
-import 'package:erta7o/presentation/widgets/waiting_widget.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:request_mandoub/presentation/widgets/waiting_widget.dart';
 import 'package:division/division.dart';
-import 'package:erta7o/core/utils.dart';
-import 'package:erta7o/generated/locale_keys.g.dart';
-import 'package:erta7o/presentation/state/order_store.dart';
+import 'package:request_mandoub/core/utils.dart';
+import 'package:request_mandoub/generated/locale_keys.g.dart';
+import 'package:request_mandoub/presentation/state/order_store.dart';
 import 'package:flutter/material.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
@@ -42,10 +43,9 @@ class _OnData extends StatelessWidget {
   Widget build(BuildContext context) {
     final gesture = Gestures()
       ..onTap(() {
-        RM.get<OrderStore>().setState(
-              (s) => s.confirmDeliveryOffer(),
-              onData: (context, model) => model.getInitOrders(),
-            );
+        RM.get<OrderStore>().setState((s) => s.confirmDeliveryOffer(),
+            onData: (context, model) =>
+                {RM.get<OrderStore>().setState((s) =>s.showOrderByid()), ExtendedNavigator.rootNavigator.pop()});
       });
     return Row(
       mainAxisSize: MainAxisSize.min,

@@ -87,7 +87,8 @@ class Restaurants {
   String image;
   String desc;
   String rate;
-  int valueadded;
+  num valueadded;
+  String distance;
   String createdAt;
   String updatedAt;
 
@@ -103,14 +104,16 @@ class Restaurants {
       this.rate,
       this.valueadded,
       this.createdAt,
-      this.updatedAt});
+      this.updatedAt,
+      this.distance
+      });
 
   Restaurants.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     nameAr = json['name_ar'];
     nameEn = json['name_en'];
-    lat = json['lat'];
-    lng = json['lng'];
+    lat = json['lat'].toString();
+    lng = json['lng'].toString();
     address = json['address'];
     image = json['image'];
     desc = json['desc'];
@@ -118,6 +121,7 @@ class Restaurants {
     valueadded = json['valueadded'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    distance = json['distance'] != null? (json['distance'] as num).toStringAsFixed(2):null;
   }
 
   Map<String, dynamic> toJson() {

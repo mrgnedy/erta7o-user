@@ -1,10 +1,10 @@
 import 'package:division/division.dart';
-import 'package:erta7o/generated/locale_keys.g.dart';
-import 'package:erta7o/presentation/state/order_store.dart';
-import 'package:erta7o/presentation/ui/navigationPages/ordersPage/all_orders_page.dart/subWidgets/tab_btn.dart';
-import 'package:erta7o/presentation/ui/navigationPages/ordersPage/all_orders_page.dart/subWidgets/ordersCard.dart';
-import 'package:erta7o/presentation/widgets/error_widget.dart';
-import 'package:erta7o/presentation/widgets/waiting_widget.dart';
+import 'package:request_mandoub/generated/locale_keys.g.dart';
+import 'package:request_mandoub/presentation/state/order_store.dart';
+import 'package:request_mandoub/presentation/ui/navigationPages/ordersPage/all_orders_page.dart/subWidgets/tab_btn.dart';
+import 'package:request_mandoub/presentation/ui/navigationPages/ordersPage/all_orders_page.dart/subWidgets/ordersCard.dart';
+import 'package:request_mandoub/presentation/widgets/error_widget.dart';
+import 'package:request_mandoub/presentation/widgets/waiting_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
@@ -38,12 +38,17 @@ class OrdersPage extends StatelessWidget {
   }
 
   Widget buildBody() {
-    return Column(
-      children: <Widget>[
-        BuildTabBar(),
-        FractionallySizedBox(widthFactor: 0.1),
-        BuildOrdersList()
-      ],
+    return RefreshIndicator(
+      onRefresh: () => Future.sync(() => RM.get<OrderStore>().setState(
+            (s) => s.getOrdersList[s.currentOrderTab],
+          )),
+      child: Column(
+        children: <Widget>[
+          BuildTabBar(),
+          FractionallySizedBox(widthFactor: 0.1),
+          BuildOrdersList()
+        ],
+      ),
     );
   }
 }
