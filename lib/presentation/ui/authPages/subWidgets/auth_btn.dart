@@ -13,7 +13,7 @@ class BuildAuthAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WhenRebuilderOr(
-      rmKey: IN.get<AuthStore>().registerKey,
+      // rmKey: IN.get<AuthStore>().registerKey,
       observe: () => RM.get<AuthStore>(),
       builder: (context, model) => _OnData(),
       onWaiting: () => WaitingWidget(color: Colors.white),
@@ -29,12 +29,17 @@ class _OnData extends StatelessWidget {
 
   // final navigateToForget = Gestures()..onTap(() =>ExtendedNavigator.rootNavigator.pushNamed(Routes.forget));
   bool get isCreate => IN.get<AuthStore>().authMode == AuthMode.register;
+  final gesture = Gestures()
+    ..onTap(() {
+      ExtendedNavigator.rootNavigator.pushNamed(Routes.forgetPassword);
+    });
   Widget buildAuthAction() {
     return Column(
       children: [
         isCreate ? buildRegister() : buildLogin(),
-        Txt(LocaleKeys.forgotPassowrd),
+        Txt(LocaleKeys.forgotPassowrd, gesture: gesture),
         StylesD.richText(
+          color: Colors.white,
           mainText: isCreate ? LocaleKeys.haveAccount : LocaleKeys.noAccount,
           subText: isCreate ? LocaleKeys.loginNow : LocaleKeys.registerNow,
           onTap: () => RM.get<AuthStore>().setState(
@@ -52,8 +57,8 @@ class _OnData extends StatelessWidget {
 
   onRegisterData(c, d) =>
       ExtendedNavigator.rootNavigator.pushNamed(Routes.verifyPage);
-  onLoginData(c, d) =>
-      ExtendedNavigator.rootNavigator.pushNamed(Routes.mainUserPage);
+  onLoginData(c, d) => ExtendedNavigator.rootNavigator
+      .pushNamedAndRemoveUntil(Routes.splashScreen, (route) => false);
 
   onLogInError(c, e) {
     if (e.toString().contains('activ'))
@@ -75,7 +80,7 @@ class _OnData extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       onPressed: () {
         // if (!IN.get<AuthStore>().authFormKey.currentState.validate()) return;
-        IN.get<AuthStore>().registerKey.setState((s) => s.register(),
+        RM.get<AuthStore>().setState((s) => s.register(),
             onData: onRegisterData, onError: onRegError);
       },
     );
@@ -93,8 +98,8 @@ class _OnData extends StatelessWidget {
           onPressed: () {
             // if (!IN.get<AuthStore>().authFormKey.currentState.validate())
             //   return;
-            IN.get<AuthStore>().registerKey.setState((s) => s.login(),
-                onData: onLoginData, onError: onLogInError);
+            RM.get<AuthStore>().setState((s) => s.login(),
+                onData: onLoginData,);
           },
         ),
       ],

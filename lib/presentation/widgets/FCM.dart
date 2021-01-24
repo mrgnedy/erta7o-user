@@ -20,7 +20,7 @@ Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
 
 class FirebaseNotifications {
   FirebaseMessaging _firebaseMessaging;
-  Function(String) onMessage;
+  Function onMessage;
   Function(String) onLaunch;
   Function(String) onResume;
   Function getTokenCallback;
@@ -55,9 +55,11 @@ class FirebaseNotifications {
 
     _firebaseMessaging.configure(
       // onBackgroundMessage: myBackgroundMessageHandler,
+      // onBackgroundMessage: myBackgroundMessageHandler,
       onMessage: (Map<String, dynamic> message) async {
+        
         print('on message $message');
-        onMessage(message['notification']['body']);
+        onMessage(message['notification']);
       },
       onResume: (Map<String, dynamic> message) async {
         print('on resume $message');

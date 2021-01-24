@@ -20,7 +20,8 @@ class TabBtn extends StatelessWidget {
             label,
             style: TxtStyle()
               ..fontSize(20)
-              ..textColor(Colors.white)
+              
+              ..textColor(index==IN.get<OrderStore>().currentOrderTab? Colors.white: Colors.grey)
               ..textAlign.center(),
           ),
         ),

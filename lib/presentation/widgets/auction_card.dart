@@ -1,3 +1,4 @@
+import 'package:erta7o/generated/locale_keys.g.dart';
 import 'package:erta7o/presentation/ui/restaurantDetails/restaurantDetails.dart';
 import 'package:division/division.dart';
 import 'package:auto_route/auto_route.dart';
@@ -44,16 +45,7 @@ class RestaurantCard extends StatelessWidget {
             isThreeLine: false,
             subtitle: Text('${restaurant.address}',
                 style: TextStyle(color: Colors.grey, height: 1.2)),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text('25', style: TextStyle(color: Colors.black)),
-                Text(' kg', style: TextStyle(color: Colors.black)),
-                SizedBox(
-                  height: 10,
-                )
-              ],
-            ),
+            trailing: Txt('${restaurant.distance} ${LocaleKeys.kg}', style: TxtStyle()),
             leading: Container(
               height: size.height / 9,
               width: size.height / 9,

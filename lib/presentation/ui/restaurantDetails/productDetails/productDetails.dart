@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:division/division.dart';
 import 'package:erta7o/core/api_utils.dart';
 import 'package:erta7o/core/utils.dart';
+import 'package:erta7o/data/models/order_byid_model.dart';
 import 'package:erta7o/data/models/order_model.dart';
 import 'package:erta7o/data/models/restaurant_model.dart';
 import 'package:erta7o/generated/locale_keys.g.dart';
@@ -90,13 +91,13 @@ class ProductDetailsPage extends StatelessWidget {
     );
   }
 
-  List<Product> get products =>
-      IN.get<OrderStore>().orderProductModel.products;
+  List<Menus> get products =>
+      IN.get<OrderStore>().currentOrder.data.first.menus;
   // List<Product> get products => IN.get<RestaurantsStore>().orderProductModel.products;
-  set setProduct(Product p) {
-    IN.get<OrderStore>().orderProductModel.products.last..menuId = IN.get<RestaurantsStore>().currentProduct.id;
-    IN.get<OrderStore>().orderProductModel.products.last = p;
-    print('No. of products: ${products.length}/t${products.last.toJson()}');
+  set setProduct(Menus p) {
+    // IN.get<OrderStore>().currentOrder.data.first.menus.last..menuId = IN.get<RestaurantsStore>().currentProduct.id;
+    IN.get<OrderStore>().currentOrder.data.first.menus.last = p;
+    print('No. of products: ${products.length}\t${products.last.toJson()}');
   }
 
   List<String> sandwitchTypes = [
@@ -110,7 +111,7 @@ class ProductDetailsPage extends StatelessWidget {
 
   Widget buildProductConfig() {
     return Container(
-      width: size.width * 0.8,
+      width: size.width * 0.81,
       child: StatefulBuilder(builder: (context, setState) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -123,7 +124,7 @@ class ProductDetailsPage extends StatelessWidget {
                 ...List.generate(sandwitchTypes.length, (index) {
                   return Container(
                     height: size.height / 20,
-                    width: size.width * 0.4,
+                    width: size.width * 0.42,
                     child: RadioListTile(
                         value: index,
                         title: Txt(sandwitchTypes[index]),
@@ -146,16 +147,6 @@ class ProductDetailsPage extends StatelessWidget {
       }),
     );
   }
-
-  // Widget buildAddition() {
-  //   return TetFieldWithTitle(
-  //     title: LocaleKeys.addMoreOrders,
-  //     onChanged: (s){
-  //       IN.get<OrderStore>().orderProductModel.
-  //     }
-  //     // dir
-  //   );
-  // }
 
   Widget buildAppBar() {
     return AppBar(
@@ -187,7 +178,7 @@ class ProductDetailsPage extends StatelessWidget {
                     ? null
                     : () {
                         setState(() => count--);
-                        setProduct = products.last..quantity = count;
+                        setProduct = products.last..quantity = '$count';
                       },
                 icon: Icon(Icons.remove),
                 color: Colors.white),
@@ -195,7 +186,7 @@ class ProductDetailsPage extends StatelessWidget {
             IconButton(
               onPressed: () {
                 setState(() => count++);
-                setProduct = products.last..quantity = count;
+                setProduct = products.last..quantity = '$count';
               },
               alignment: Alignment.center,
               icon: Icon(Icons.add),
@@ -243,85 +234,6 @@ class ProductDetailsPage extends StatelessWidget {
       ),
     );
   }
-
-  // int hrsCount = 1;
-  // Widget buildTime() {
-  //   final style = ParentStyle()
-  //     ..border(all: 1, color: ColorsD.main)
-  //     ..borderRadius(all: 8)
-  //     ..padding(all: 0)
-  //     ..width(size.width * 0.45)
-  //     ..height(size.height / 16);
-  //   return StatefulBuilder(builder: (context, setState) {
-  //     Function addOnTap = () => setState(() => hrsCount++);
-  //     Function removeOnTap =
-  //         count <= 1 ? null : () => setState(() => hrsCount--);
-  //     return Parent(
-  //       style: style,
-  //       child: Row(
-  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //         children: <Widget>[
-  //           IconButton(
-  //               padding: EdgeInsets.zero,
-  //               alignment: Alignment.center,
-  //               onPressed: removeOnTap,
-  //               icon: Icon(Icons.remove),
-  //               color: ColorsD.main),
-  //           Txt(
-  //             "$hrsCount ساعة",
-  //             style: TxtStyle()..textColor(ColorsD.main),
-  //           ),
-  //           IconButton(
-  //             onPressed: addOnTap,
-  //             alignment: Alignment.center,
-  //             icon: Icon(Icons.add),
-  //             color: ColorsD.main,
-  //           )
-  //         ],
-  //       ),
-  //     );
-  //   });
-  // }
-
-  // Widget buildDialogActons() {
-  //   final doneStyle = TxtStyle()
-  //     ..width(size.width * 0.2)
-  //     ..height(size.height / 18)
-  //     ..borderRadius(all: 5)
-  //     ..alignmentContent.center()
-  //     ..background.color(ColorsD.main)
-  //     ..textColor(Colors.white);
-  //   final backStyle = TxtStyle()
-  //     ..width(size.width * 0.2)
-  //     ..height(size.height / 18)
-  //     ..borderRadius(all: 5)
-  //     ..alignmentContent.center()
-  //     ..background.color(Colors.white)
-  //     ..textColor(ColorsD.main)
-  //     ..border(all: 1, color: ColorsD.main);
-  //   final doneGesture = Gestures()
-  //     ..onTap(() async {
-  //       ExtendedNavigator.rootNavigator.pop();
-  //       final x =
-  //           await ExtendedNavigator.rootNavigator.pushNamed(Routes.mapScreen);
-  //       if (x != null)
-  //         ExtendedNavigator.rootNavigator.pushNamed(Routes.orderDetailsPage);
-  //     });
-  //   final backGesture = Gestures()
-  //     ..onTap(() => ExtendedNavigator.rootNavigator.pop());
-  //   return Row(
-  //     mainAxisSize: MainAxisSize.min,
-  //     children: <Widget>[
-  //       Txt(
-  //         LocaleKeys.back,
-  //         style: backStyle,
-  //         gesture: backGesture,
-  //       ),
-  //       SizedBox(width: 10),
-  //       Txt(LocaleKeys.done, style: doneStyle, gesture: doneGesture),
-  //     ],
-  //   );
-  // }
 }
 
 class _BuildProdctName extends StatelessWidget {

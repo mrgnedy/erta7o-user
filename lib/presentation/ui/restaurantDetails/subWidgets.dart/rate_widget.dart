@@ -24,9 +24,10 @@ class BuildRateWidget extends StatelessWidget {
             Txt(LocaleKeys.userReviews),
           ],
         ),
-        rate.contains('null')
-            ? Txt(LocaleKeys.noReviews)
-            : Container(
+        // rate.contains('null')
+        //     ? Txt(LocaleKeys.noReviews)
+        //     : 
+            Container(
                 child: Row(
                     children: <Widget>[
                       Expanded(
@@ -34,10 +35,10 @@ class BuildRateWidget extends StatelessWidget {
                           isReadOnly: true,
                           allowHalfRating: true,
                           starCount: 5,
-                          rating: double.parse(rate),
+                          rating: double.tryParse(rate)??0,
                         ),
                       ),
-                      Txt(LocaleKeys.reviews),
+                      // Txt(LocaleKeys.reviews),
                       Txt(LocaleKeys.reviews),
                       Icon(Icons.arrow_forward_ios, color: Colors.white)
                     ],

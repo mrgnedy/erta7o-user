@@ -34,9 +34,9 @@ class _OnData extends StatelessWidget {
     return restaurants.isEmpty? Center(child: Txt('لا توجد'),): Column(
       mainAxisSize: MainAxisSize.min,
       children: List.generate(
-        10,
+        restaurants.length,
         (index) => RestaurantCard(restaurant: restaurants[index]),
       ),
     );
-  }
+  } 
 }

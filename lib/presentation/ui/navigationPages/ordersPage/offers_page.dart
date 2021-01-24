@@ -34,7 +34,7 @@ class _BuildBody extends StatelessWidget {
   List<DeliveryDetails> get deliveryOffers => IN.get<OrderStore>().deliveryOffersModel.data;
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return deliveryOffers.isEmpty? Center(child: Txt(LocaleKeys.noOffers),) : SingleChildScrollView(
         child: Center(
       child: Column(
         children: List.generate(deliveryOffers.length, (index) {

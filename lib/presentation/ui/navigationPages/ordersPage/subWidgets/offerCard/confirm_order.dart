@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:erta7o/presentation/widgets/waiting_widget.dart';
 import 'package:division/division.dart';
 import 'package:erta7o/core/utils.dart';
@@ -42,10 +43,9 @@ class _OnData extends StatelessWidget {
   Widget build(BuildContext context) {
     final gesture = Gestures()
       ..onTap(() {
-        RM.get<OrderStore>().setState(
-              (s) => s.confirmDeliveryOffer(),
-              onData: (context, model) => model.getInitOrders(),
-            );
+        RM.get<OrderStore>().setState((s) => s.confirmDeliveryOffer(),
+            onData: (context, model) =>
+                {RM.get<OrderStore>().setState((s) =>s.showOrderByid()), ExtendedNavigator.rootNavigator.pop()});
       });
     return Row(
       mainAxisSize: MainAxisSize.min,

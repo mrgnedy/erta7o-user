@@ -2,8 +2,10 @@ import 'package:division/division.dart';
 import 'package:erta7o/const/resource.dart';
 import 'package:erta7o/core/utils.dart';
 import 'package:erta7o/generated/locale_keys.g.dart';
+import 'package:erta7o/presentation/ui/navigationPages/homePage/subWidgets/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:states_rebuilder/states_rebuilder.dart';
 
 class BottomNavBar extends StatefulWidget {
   final PageController pageController;
@@ -49,6 +51,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                     : EdgeInsets.zero;
             return InkWell(
               onTap: () => setState(() => {
+                RM.get<HomeAppBarStore>().setState((s) => s.index=index),
                     widget.currentPage = index,
                     widget.pageController.animateToPage(widget.currentPage,
                         duration: Duration(milliseconds: 200),

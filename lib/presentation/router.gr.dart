@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:erta7o/presentation/ui/mainPage/mainPage.dart';
+import 'package:erta7o/presentation/ui/splash_screen.dart';
 import 'package:erta7o/presentation/ui/authPages/authPage.dart';
 import 'package:erta7o/presentation/ui/authPages/verifyPage.dart';
 import 'package:erta7o/presentation/ui/authPages/forget_password.dart';
@@ -17,10 +18,14 @@ import 'package:erta7o/presentation/ui/restaurantDetails/productDetails/productD
 import 'package:erta7o/presentation/widgets/map.dart';
 import 'package:erta7o/presentation/ui/navigationPages/ordersPage/orderDetails.dart';
 import 'package:erta7o/presentation/ui/navigationPages/ordersPage/offers_page.dart';
+import 'package:erta7o/presentation/ui/drawerPages/about_page.dart';
+import 'package:erta7o/presentation/ui/drawerPages/contact_us.dart';
+import 'package:erta7o/presentation/ui/authPages/rechange_pw.dart';
 
 abstract class Routes {
   static const mainUserPage = '/main-user-page';
-  static const authPage = '/';
+  static const splashScreen = '/';
+  static const authPage = '/auth-page';
   static const verifyPage = '/verify-page';
   static const forgetPassword = '/forget-password';
   static const restaurantDetails = '/restaurant-details';
@@ -29,8 +34,12 @@ abstract class Routes {
   static const mapScreen = '/map-screen';
   static const orderDetailsPage = '/order-details-page';
   static const offersPage = '/offers-page';
+  static const aboutPage = '/about-page';
+  static const contactUs = '/contact-us';
+  static const rechangePWPage = '/rechange-pw-page';
   static const all = {
     mainUserPage,
+    splashScreen,
     authPage,
     verifyPage,
     forgetPassword,
@@ -40,6 +49,9 @@ abstract class Routes {
     mapScreen,
     orderDetailsPage,
     offersPage,
+    aboutPage,
+    contactUs,
+    rechangePWPage,
   };
 }
 
@@ -56,8 +68,19 @@ class Router extends RouterBase {
     final args = settings.arguments;
     switch (settings.name) {
       case Routes.mainUserPage:
+        if (hasInvalidArgs<MainUserPageArguments>(args)) {
+          return misTypedArgsRoute<MainUserPageArguments>(args);
+        }
+        final typedArgs =
+            args as MainUserPageArguments ?? MainUserPageArguments();
         return MaterialPageRoute<dynamic>(
-          builder: (context) => MainUserPage(),
+          builder: (context) =>
+              MainUserPage(key: typedArgs.key, page: typedArgs.page),
+          settings: settings,
+        );
+      case Routes.splashScreen:
+        return MaterialPageRoute<dynamic>(
+          builder: (context) => SplashScreen(),
           settings: settings,
         );
       case Routes.authPage:
@@ -116,6 +139,28 @@ class Router extends RouterBase {
           builder: (context) => OffersPage(),
           settings: settings,
         );
+      case Routes.aboutPage:
+        if (hasInvalidArgs<AboutPageArguments>(args)) {
+          return misTypedArgsRoute<AboutPageArguments>(args);
+        }
+        final typedArgs = args as AboutPageArguments ?? AboutPageArguments();
+        return MaterialPageRoute<dynamic>(
+          builder: (context) => AboutPage(
+              key: typedArgs.key,
+              title: typedArgs.title,
+              label: typedArgs.label),
+          settings: settings,
+        );
+      case Routes.contactUs:
+        return MaterialPageRoute<dynamic>(
+          builder: (context) => ContactUs(),
+          settings: settings,
+        );
+      case Routes.rechangePWPage:
+        return MaterialPageRoute<dynamic>(
+          builder: (context) => RechangePWPage(),
+          settings: settings,
+        );
       default:
         return unknownRoutePage(settings.name);
     }
@@ -125,6 +170,13 @@ class Router extends RouterBase {
 // *************************************************************************
 // Arguments holder classes
 // **************************************************************************
+
+//MainUserPage arguments holder class
+class MainUserPageArguments {
+  final Key key;
+  final int page;
+  MainUserPageArguments({this.key, this.page});
+}
 
 //VerifyPage arguments holder class
 class VerifyPageArguments {
@@ -138,4 +190,12 @@ class OrderDetailsPageArguments {
   final Key key;
   final bool unConfirmed;
   OrderDetailsPageArguments({this.key, this.unConfirmed});
+}
+
+//AboutPage arguments holder class
+class AboutPageArguments {
+  final Key key;
+  final String title;
+  final String label;
+  AboutPageArguments({this.key, this.title, this.label});
 }

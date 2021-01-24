@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:division/division.dart';
 import 'package:erta7o/generated/locale_keys.g.dart';
 import 'package:erta7o/presentation/state/auth_store.dart';
 import 'package:erta7o/presentation/widgets/waiting_widget.dart';
@@ -16,7 +17,7 @@ class BuildAuthTFs extends StatelessWidget {
   Widget build(BuildContext context) {
     // registerKey.state = registerKey.state..register();
     return WhenRebuilderOr(
-      rmKey: RM.get<AuthStore>().state.registerKey,
+      // rmKey: RM.get<AuthStore>().state.registerKey,
       observe: () => RM.get<AuthStore>(),
       builder: (context, model) => _OnData(),
       // onWaiting: ()=>WaitingWidget(),
@@ -35,11 +36,13 @@ class _OnData extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          BuildTextFormField(onChanged: getPhone, label: LocaleKeys.phone),
+          BuildTextFormField(onChanged: getPhone, label: LocaleKeys.phone, isPhone: true,),
           BuildTextFormField(
               onChanged: getName, label: LocaleKeys.userName, changable: true),
           BuildTextFormField(
-              onChanged: getPassword, label: LocaleKeys.password),
+              isPassword: true,
+              onChanged: getPassword,
+              label: LocaleKeys.password),
           BuildTextFormField(
             changable: true,
             ctrler: locationCtrler,
@@ -83,13 +86,17 @@ class _OnData extends StatelessWidget {
   }
 }
 
-class BuildTextFormField extends StatelessWidget {
+class BuildTextFormField extends StatefulWidget {
   final TextEditingController ctrler;
+  final bool isPhone;
   final String label;
   final Function validator;
   final Widget icon;
+  final bool isPassword;
   final Function iconCallback;
   final Function onChanged;
+  final int minLines;
+  // final bool obsecure;
   final bool changable;
 
   const BuildTextFormField(
@@ -98,16 +105,36 @@ class BuildTextFormField extends StatelessWidget {
       this.label,
       this.validator,
       this.icon,
+      this.isPhone=false,
+      this.minLines,
       this.iconCallback,
       this.changable = false,
+      // this.obsecure=false,
+      this.isPassword = false,
       this.onChanged})
       : super(key: key);
+
+  @override
+  _BuildTextFormFieldState createState() => _BuildTextFormFieldState();
+}
+
+class _BuildTextFormFieldState extends State<BuildTextFormField> {
+  bool obsecure;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    obsecure = widget.isPassword ? true : false;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Visibility(
-      visible:
-          changable ? IN.get<AuthStore>().authMode == AuthMode.register : true,
+      visible: widget.changable
+          ? IN.get<AuthStore>().authMode == AuthMode.register
+          : true,
       child: Container(
         width: size.width * 0.75,
         child: Directionality(
@@ -115,9 +142,12 @@ class BuildTextFormField extends StatelessWidget {
               ? TextDirection.rtl
               : TextDirection.ltr,
           child: TextFormField(
-            onChanged: onChanged,
-            controller: ctrler,
-            validator: validator,
+            onChanged: widget.onChanged,
+            obscureText: widget.isPassword ? obsecure : false,
+            controller: widget.ctrler,
+            minLines: widget.minLines,
+            maxLines: widget.isPassword ? 1 : null,
+            validator: widget.validator,
             style: TextStyle(height: 1.5),
             decoration: InputDecoration(
                 enabledBorder: UnderlineInputBorder(
@@ -126,11 +156,21 @@ class BuildTextFormField extends StatelessWidget {
                     borderSide: BorderSide(color: Colors.white, width: 2)),
                 focusedErrorBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.red, width: 2)),
-                suffixIcon: icon,
+                    prefix: widget.isPhone? Txt('+966', style: TxtStyle()..textColor(Colors.white),): null,
+                suffixIcon: widget.isPassword
+                    ? InkWell(
+                        child: Icon(Icons.lock, color: Colors.grey),
+                        onTap: () {
+                          setState(() {
+                            obsecure = !obsecure;
+                          });
+                        },
+                      )
+                    : widget.icon,
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 ),
-                labelText: label),
+                labelText: widget.label),
           ),
         ),
       ),

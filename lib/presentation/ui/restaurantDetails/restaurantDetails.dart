@@ -22,11 +22,13 @@ class RestaurantDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return WhenRebuilderOr<RestaurantsStore>(
-      observe: () => RM.get<RestaurantsStore>(),
-      initState: (_, m) => m.setState((s) => s.getRestaurant()),
-      onWaiting: () => WaitingWidget(),
-      builder: (context, model) => _OnData(),
+    return Scaffold(
+          body: WhenRebuilderOr<RestaurantsStore>(
+        observe: () => RM.get<RestaurantsStore>(),
+        initState: (_, m) => m.setState((s) => s.getRestaurant()),
+        onWaiting: () => WaitingWidget(),
+        builder: (context, model) => _OnData(),
+      ),
     );
   }
 }

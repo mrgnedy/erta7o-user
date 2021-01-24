@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:division/division.dart';
 import 'package:erta7o/core/utils.dart';
+import 'package:erta7o/data/models/order_byid_model.dart';
 import 'package:erta7o/generated/locale_keys.g.dart';
+import 'package:erta7o/presentation/state/order_store.dart';
 import 'package:erta7o/presentation/state/restaurants_store.dart';
 import 'package:erta7o/presentation/ui/restaurantDetails/productDetails/subWidgets/done_action.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +21,25 @@ class BuildAction extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        _BuildCustomBtn(label: LocaleKeys.addMoreOrders, onTap: () {}),
+        _BuildCustomBtn(
+            label: LocaleKeys.addMoreOrders,
+            onTap: () {
+              IN.get<OrderStore>().currentOrder.data.first.order.restaurantId =
+                  IN.get<RestaurantsStore>().currentRestoID;
+              IN.get<OrderStore>().currentOrder.data.first.menus.last
+                ..menuId = IN.get<RestaurantsStore>().currentProduct.id;
+              IN.get<OrderStore>().currentOrder.data.first.menus.last
+                ..menuEn = IN.get<RestaurantsStore>().currentProduct.nameEn;
+              IN.get<OrderStore>().currentOrder.data.first.menus.last
+                ..menuAr = IN.get<RestaurantsStore>().currentProduct.nameAr;
+
+              IN.get<OrderStore>().currentOrder.data.first.menus.last
+                ..price =
+                    num.parse(IN.get<RestaurantsStore>().currentProduct.price)
+                        .toDouble();
+              IN.get<OrderStore>().currentOrder.data.first.menus.add(Menus());
+              ExtendedNavigator.rootNavigator.pop();
+            }),
         _BuildCustomBtn(
             label: LocaleKeys.completeOrder,
             onTap: () => showTimeDialog(context)),
@@ -36,7 +56,7 @@ class BuildAction extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         child: Container(
-          height: size.height / 2.6,
+          height: size.height / 2.4,
           child: Center(
             child: Padding(
               padding: const EdgeInsets.all(12.0),

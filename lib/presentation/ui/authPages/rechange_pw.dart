@@ -109,6 +109,7 @@
 //   }
 // }
 
+import 'package:auto_route/auto_route.dart';
 import 'package:division/division.dart';
 import 'package:erta7o/const/resource.dart';
 import 'package:erta7o/core/utils.dart';
@@ -118,6 +119,8 @@ import 'package:erta7o/presentation/ui/authPages/subWidgets/text_fields.dart';
 import 'package:erta7o/presentation/widgets/waiting_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
+
+import '../../router.gr.dart';
 
 class RechangePWPage extends StatelessWidget {
   @override
@@ -182,6 +185,7 @@ class _EnterBtn extends StatelessWidget {
       ..width(size.width * 0.4)
       ..height(size.height / 16)
       ..background.color(Colors.white)
+      ..alignmentContent.center()
       ..textColor(ColorsD.main)
       ..borderRadius(all: 5);
     final gesture = Gestures()
@@ -191,7 +195,7 @@ class _EnterBtn extends StatelessWidget {
           RM.show((c) => AlertDialogs.failed(
               context: c, content: LocaleKeys.unidenticalPassword));
         else
-          RM.get<AuthStore>().setState((s) => s.rechangePassowrd());
+          RM.get<AuthStore>().setState((s) => s.rechangePassowrd(), onData: (context, model) => ExtendedNavigator.rootNavigator.pushNamedAndRemoveUntil(Routes.splashScreen, (route) => false),);
       });
     return Txt(LocaleKeys.signin, style: style, gesture: gesture);
   }

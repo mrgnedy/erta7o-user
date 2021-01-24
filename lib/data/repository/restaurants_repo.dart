@@ -1,8 +1,11 @@
 import 'package:erta7o/core/api_utils.dart';
+import 'package:erta7o/presentation/state/auth_store.dart';
+import 'package:states_rebuilder/states_rebuilder.dart';
 
 class RestaurantsRepo {
   Future getHome() async {
-    String url = APIs.homeEP;
+    String url = IN.get<AuthStore>().isAuth ? APIs.homeEP : APIs.unauthhomeEP;
+    print('${url == APIs.homeEP ? 'Getting auth home' : 'Getting unauthHome'}');
     return await APIs.getRequest(url);
   }
 
@@ -28,5 +31,9 @@ class RestaurantsRepo {
     return await APIs.postRequest(url, body);
   }
 
- 
+  Future rateRestaurant(rate, id) async {
+    String url = APIs.addrestaurantrateEP;
+    Map<String, dynamic> body = {"restaurant_id": "$id", "rate": "$rate"};
+    return await APIs.postRequest(url, body);
+  }
 }

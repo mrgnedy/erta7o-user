@@ -43,4 +43,9 @@ class OrderRepo{
     Map<String, dynamic> body = {'order_id': '$orderID'};
     return await APIs.postRequest(url, body);
   }
+  Future deleteOrder(orderID) async {
+    String url = APIs.delOrderEP;
+    Map<String, dynamic> body = {'order_id': '$orderID'};
+    return await APIs.postRequest(url, body);
+  }
 }

@@ -5,6 +5,7 @@ import 'package:erta7o/core/utils.dart';
 import 'package:erta7o/data/models/restaurant_model.dart';
 import 'package:erta7o/generated/locale_keys.g.dart';
 import 'package:erta7o/presentation/router.gr.dart';
+import 'package:erta7o/presentation/state/auth_store.dart';
 import 'package:erta7o/presentation/state/restaurants_store.dart';
 import 'package:flutter/material.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
@@ -86,17 +87,88 @@ class MenuCard extends StatelessWidget {
                 ),
               ),
             ),
-            buildOrderBtn()
+            buildOrderBtn(context)
           ],
         ),
       ),
     );
   }
 
-  Widget buildOrderBtn() {
+  Widget buildOrderBtn(context) {
+    final size = MediaQuery.of(context).size;
+    final txtStyle = TxtStyle()
+      ..textColor(Colors.black)
+      ..fontSize(18)
+      ..fontSize(16)
+      ..textAlign.center();
+    final yesStyle = TxtStyle()
+      ..textColor(Colors.white)
+      ..borderRadius(all: 5)
+      ..background.color(ColorsD.main)
+      ..width(size.width * 0.22)
+      ..alignmentContent.center()
+      ..fontSize(16)
+      ..textAlign.center();
+    final noStyle = TxtStyle()
+      ..textColor(ColorsD.main)
+      ..alignmentContent.center()
+      ..border(color: ColorsD.main)
+      ..width(size.width * 0.22)
+      ..fontSize(18);
+    final yesGesture = Gestures()
+      ..onTap(() {
+        ExtendedNavigator.rootNavigator
+            .pushNamedAndRemoveUntil(Routes.authPage, (route) => false);
+      });
+    final noGesture = Gestures()
+      ..onTap(() {
+        ExtendedNavigator.rootNavigator.pop();
+      });
     final gesture = Gestures()
-      ..onTap(() =>
-          ExtendedNavigator.rootNavigator.pushNamed(Routes.productDetailsPage));
+      ..onTap(() {
+        print(IN.get<AuthStore>().isAuth);
+        if (!IN.get<AuthStore>().isAuth) {
+          showDialog(
+            context: context,
+            builder: (context) => Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: Container(
+                height: size.height / 4.5,
+                alignment: Alignment.center,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Txt(
+                      LocaleKeys.cantOrderRegister,
+                      style: txtStyle,
+                    ),
+                    SizedBox(height: size.height * 0.0351),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Txt(
+                          LocaleKeys.yes,
+                          style: yesStyle,
+                          gesture: yesGesture,
+                        ),
+                        Txt(
+                          LocaleKeys.no,
+                          style: noStyle,
+                          gesture: noGesture,
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        } else
+          ExtendedNavigator.rootNavigator.pushNamed(Routes.productDetailsPage);
+      });
     final style = TxtStyle()
       ..textColor(Colors.white)
       ..background.color(ColorsD.main)

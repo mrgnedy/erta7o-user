@@ -10,7 +10,7 @@ import 'package:states_rebuilder/states_rebuilder.dart';
 
 import '../../../../router.gr.dart';
 
-class BuildOrderActions extends StatelessWidget { 
+class BuildOrderActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WhenRebuilderOr<OrderStore>(
@@ -23,8 +23,10 @@ class BuildOrderActions extends StatelessWidget {
 
 class BuildOrderAction extends StatelessWidget {
   String label = '';
+  Size size;
   Function callback = () {};
-  String get status => IN.get<OrderStore>().currentOrder.data.first.order.status;
+  String get status =>
+      IN.get<OrderStore>().currentOrder?.data?.first?.order?.status;
   selectAction() {
     if (!IN.get<OrderStore>().isConfirmed) {
       label = LocaleKeys.confrimOrder;
@@ -57,12 +59,13 @@ class BuildOrderAction extends StatelessWidget {
   }
 
   confirmOrder() {
-    RM
-        .get<OrderStore>()
-        .setState((s) => s.makeOrder().then((value) => s.getInitOrders()),
-            onError: (c, e) {
-      print(e);
-    });
+    RM.get<OrderStore>().setState(
+      (s) => s.makeOrder().then((value) => s.showOrderByid()),
+      onError: (c, e) {
+        print(e);
+      },
+      // onData: (context, model) => model.,
+    );
   }
 
   showOffers() {
@@ -79,11 +82,17 @@ class BuildOrderAction extends StatelessWidget {
 
   rateDelivery() {
     final doneStyle = TxtStyle()
-      ..textColor(Colors.white) 
+      ..textColor(Colors.white)
       ..borderRadius(all: 5)
-      ..background.color(ColorsD.main)..width(100)
+      ..background.color(ColorsD.main)
+      ..width(100)
+      ..width(size.width * 0.15)
+      ..alignmentContent.center()
       ..border(color: ColorsD.main);
     final cancelStyle = TxtStyle()
+      ..width(size.width * 0.15)
+      ..alignmentContent.center()
+      ..border(color: ColorsD.main, all:1)
       ..textColor(ColorsD.main)
       ..borderRadius(all: 5)
       ..background.color(Colors.white);
@@ -103,37 +112,46 @@ class BuildOrderAction extends StatelessWidget {
           ExtendedNavigator.rootNavigator.pop();
         },
       );
-    final size = MediaQuery.of(ctx).size;
+    // final size = MediaQuery.of(ctx).size;
     return showDialog(
       context: ctx,
       builder: (context) => Dialog(
         child: Container(
-          height: size.height / 4,
-          child: Column(
-            children: [
-              Txt(LocaleKeys.rateDelivery),
-              SmoothStarRating(
-                starCount: 5,
-                color: Colors.amber,
-                borderColor: Colors.amber,
-                onRated: getRate,
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Txt(
-                    LocaleKeys.back,
-                    style: cancelStyle,
-                    gesture: doneGesture,
-                  ),
-                  Txt(
-                    LocaleKeys.done,
-                    style: doneStyle,
-                    gesture: backGesture,
-                  ),
-                ],
-              )
-            ],
+          height: size.height / 5,
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Txt(
+                  LocaleKeys.rateDelivery,
+                  style: TxtStyle(),
+                ),
+                SmoothStarRating(
+                  starCount: 5,
+                  color: Colors.amber,
+                  borderColor: Colors.amber,
+                  onRated: getRate,
+                ),
+                SizedBox(height: size.height*0.024),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Txt(
+                      LocaleKeys.back,
+                      style: cancelStyle,
+                      gesture: backGesture,
+                    ),
+                    SizedBox(width: size.width*0.051,),
+                    Txt(
+                      LocaleKeys.done,
+                      style: doneStyle,
+                      gesture: doneGesture,
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -145,7 +163,7 @@ class BuildOrderAction extends StatelessWidget {
   Widget build(context) {
     ctx = context;
     selectAction();
-    final size = MediaQuery.of(context).size;
+    size = MediaQuery.of(context).size;
     print(label);
     final style = TxtStyle()
       ..alignmentContent.center()

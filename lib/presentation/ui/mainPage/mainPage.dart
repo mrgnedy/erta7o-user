@@ -1,27 +1,38 @@
 // import 'package:flutter/cupertino.dart';
 import 'dart:math';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:division/division.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:erta7o/const/resource.dart';
 import 'package:erta7o/core/utils.dart';
 import 'package:erta7o/generated/locale_keys.g.dart';
+import 'package:erta7o/presentation/state/auth_store.dart';
 import 'package:erta7o/presentation/ui/drawerPages/drawer.dart';
 import 'package:erta7o/presentation/ui/mainPage/subWidgets/filters.dart';
 import 'package:erta7o/presentation/ui/mainPage/subWidgets/restaurants.dart';
 import 'package:erta7o/presentation/ui/mainPage/subWidgets/slider.dart';
 import 'package:erta7o/presentation/ui/navigationPages/homePage/home_page.dart';
+import 'package:erta7o/presentation/ui/navigationPages/homePage/subWidgets/app_bar.dart';
 import 'package:erta7o/presentation/ui/navigationPages/notificationPage/notification_page.dart';
 import 'package:erta7o/presentation/ui/navigationPages/ordersPage/all_orders_page.dart/ordersPage.dart';
+import 'package:erta7o/presentation/widgets/FCM.dart';
 import 'package:erta7o/presentation/widgets/auction_card.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:states_rebuilder/states_rebuilder.dart';
+import '../../router.gr.dart';
 import '../navigationPages/homePage/subWidgets/bottom_navigation.dart';
 import '../navigationPages/profilePage/profile_page.dart';
 
 class MainUserPage extends StatefulWidget {
+  final int page;
+
+  const MainUserPage({Key key, this.page}) : super(key: key);
   @override
   _MainUserPageState createState() => _MainUserPageState();
 }
@@ -42,21 +53,72 @@ class _MainUserPageState extends State<MainUserPage>
     super.initState();
     pageCtrler = PageController()
       ..addListener(() {
+        // print('currentPage is: ${pageCtrler.page.toInt()}');
         currentPage = pageCtrler.page.toInt();
         bottomNavKey.currentState.setState(() {});
       });
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (widget.page != null) pageCtrler.jumpToPage(widget.page);
+    });
     animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 600));
     searchAnim = Tween(begin: 0.0, end: 2 * pi).animate(CurvedAnimation(
       curve: Curves.easeInCubic,
       parent: animationController,
     ));
+    FirebaseNotifications.handler(onMessage, onLaunch, onResume);
+  }
+
+  onMessage(msg) {
+    print('helooooo');
+    Future.delayed(Duration(milliseconds: 100), () {
+      // print()
+      FlutterRingtonePlayer.playNotification();
+      try {
+        Flushbar(
+          
+            animationDuration: Duration(milliseconds: 200),
+            duration: Duration(seconds: 3),
+            flushbarPosition: FlushbarPosition.TOP,
+            flushbarStyle: FlushbarStyle.GROUNDED,
+            borderRadius: 12,
+            routeBlur: 10,
+            routeColor: Colors.grey,
+            title: '${msg['title']}',
+            message: '${msg['body']}',
+            onTap: (flushbar) {
+              ExtendedNavigator.rootNavigator
+                  .popUntil(ModalRoute.withName(Routes.mainUserPage));
+              print('Is current route');
+              Future.delayed(Duration(milliseconds: 500), () {
+                pageCtrler.animateToPage(2,
+                    duration: Duration(seconds: 1), curve: Curves.easeInCubic);
+              });
+            })
+          ..show(context);
+      } catch (e) {
+        print(e);
+      }
+    });
+  }
+
+  onLaunch(msg) {
+    // Future.delayed(Duration(milliseconds: 100), () {
+    //   ExtendedNavigator.rootNavigator.pushNamed(Routes.contactUs);
+    // });
+  }
+
+  onResume(msg) {
+    // Future.delayed(Duration(milliseconds: 100), () {
+    //   ExtendedNavigator.rootNavigator.pushNamed(Routes.contactUs);
+    // });
   }
 
   PageController pageCtrler;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    print(IN.get<AuthStore>().credentialsModel?.apiToken);
     // context.locale = Locale('ar');
     size = MediaQuery.of(context).size;
     searchBarSize = Size(size.width * 0.5, size.height / 12);
@@ -70,17 +132,21 @@ class _MainUserPageState extends State<MainUserPage>
         key: _scaffoldKey,
         drawer: DrawerMenu(),
         backgroundColor: ColorsD.main,
-        bottomNavigationBar: StatefulBuilder(
-            key: bottomNavKey,
-            builder: (context, setState) {
-              return BottomNavBar(
-                  currentPage: currentPage, pageController: pageCtrler);
-            }),
+        bottomNavigationBar: IN.get<AuthStore>().isAuth
+            ? StatefulBuilder(
+                key: bottomNavKey,
+                builder: (context, setState) {
+                  return BottomNavBar(
+                      currentPage: currentPage, pageController: pageCtrler);
+                })
+            : null,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: buildActionBtn(),
-        appBar: buildAppBar(scaffoldKey: _scaffoldKey),
+        floatingActionButton:
+            IN.get<AuthStore>().isAuth ? buildActionBtn() : null,
+        appBar: HomeAppBar(scaffoldKey: _scaffoldKey, height: size.height / 12),
         body: PageView(
           controller: pageCtrler,
+          physics: NeverScrollableScrollPhysics(),
           children: [
             HomePage(),
             OrdersPage(),
@@ -115,104 +181,16 @@ class _MainUserPageState extends State<MainUserPage>
               InkWell(
                   child: Image.asset(R.ASSETS_IMAGES_MENU_PNG),
                   onTap: () => scaffoldKey.currentState.openDrawer()),
-              Text(LocaleKeys.main).tr(),
+              Txt(LocaleKeys.main,
+                  style: TxtStyle()
+                    ..fontSize(26)
+                    ..textColor(Colors.white)),
               animatedSearchWidget(),
             ],
           ),
         ),
         preferredSize: Size.fromHeight(size.height / 12));
   }
-
-  // Widget buildSlider() {
-  //   return Container(
-  //     height: size.height / 4,
-  //     width: size.width,
-  //     child: Stack(
-  //       fit: StackFit.expand,
-  //       children: <Widget>[
-  //         CarouselSlider(
-  //           // pgCtrler: indicatorCtrler,
-  //           items: List.generate(
-  //               dummyImageList.length,
-  //               (index) => ClipRRect(
-  //                     borderRadius: BorderRadius.circular(12),
-  //                     child: Image.network(
-  //                       dummyImageList[index],
-  //                       width: size.width,
-  //                       fit: BoxFit.cover,
-  //                     ),
-  //                   )),
-  //           options: CarouselOptions(
-  //             enlargeCenterPage: true,
-  //             viewportFraction: 1,
-  //             aspectRatio: .5,
-  //             onScrolled: (p) {
-  //               // indicatorCtrler.jumpToPage(2);
-  //             },
-  //             onPageChanged: (p, reason) {},
-  //             height: size.height / 4,
-  //             pauseAutoPlayOnManualNavigate: true,
-  //             autoPlay: true,
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // int selectedFilter = 0;
-  // Widget buildFilters() {
-  //   List<String> filters = [
-  //     LocaleKeys.allOrders,
-  //     LocaleKeys.nearOrders,
-  //     LocaleKeys.mostOrders
-  //   ];
-  //   return StatefulBuilder(builder: (context, settState) {
-  //     return Container(
-  //       width: size.width * 0.8,
-  //       child: Row(
-  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //         children: List.generate(filters.length, (index) {
-  //           return FittedBox(
-  //             child: InkWell(
-  //                 onTap: () => settState(() => selectedFilter = index),
-  //                 child:
-  //                     buildFilterBtn(selectedFilter == index, filters[index])),
-  //           );
-  //         }),
-  //       ),
-  //     );
-  //   });
-  // }
-
-  // Widget buildFilterBtn(bool isSelected, String filter) {
-  //   // bool isSelected = selectedIndex == selectedFilter;
-  //   final style = TxtStyle()
-  //     ..borderRadius(all: 12)
-  //     ..padding(vertical: 5, horizontal: 12)
-  //     ..fontFamily('bein')
-  //     ..fontSize(18)
-  //     ..margin(vertical: 15)
-  //     ..border(color: Colors.white, all: 2)
-  //     ..textColor(isSelected ? ColorsD.main : Colors.white)
-  //     ..background.color(isSelected ? Colors.white : ColorsD.main);
-  //   return Txt(
-  //     filter,
-  //     style: style,
-  //   );
-  // }
-
-  // Widget buildRestaurantsCards() {
-  //   return Column(
-  //     mainAxisSize: MainAxisSize.min,
-  //     children: List.generate(
-  //       10,
-  //       (index) => RestaurantCard(
-  //         image: dummyImageList[Random().nextInt(dummyImageList.length)],
-  //       ),
-  //     ),
-  //   );
-  // }
 
   Widget animatedSearchWidget() {
     return AnimatedBuilder(
@@ -364,7 +342,10 @@ class _MainUserPageState extends State<MainUserPage>
     return Container(
       margin: EdgeInsets.only(top: 15),
       child: FloatingActionButton(
-          child: Image.asset(R.ASSETS_IMAGES_LOGO_PNG),
+          child: Image.asset(
+            R.ASSETS_IMAGES_LOGO_PNG,
+            color: ColorsD.main,
+          ),
           backgroundColor: Colors.white,
           elevation: 0,
           onPressed: null),

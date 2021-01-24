@@ -38,12 +38,17 @@ class OrdersPage extends StatelessWidget {
   }
 
   Widget buildBody() {
-    return Column(
-      children: <Widget>[
-        BuildTabBar(),
-        FractionallySizedBox(widthFactor: 0.1),
-        BuildOrdersList()
-      ],
+    return RefreshIndicator(
+      onRefresh: () => Future.sync(() => RM.get<OrderStore>().setState(
+            (s) => s.getOrdersList[s.currentOrderTab],
+          )),
+      child: Column(
+        children: <Widget>[
+          BuildTabBar(),
+          FractionallySizedBox(widthFactor: 0.1),
+          BuildOrdersList()
+        ],
+      ),
     );
   }
 }

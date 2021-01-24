@@ -60,7 +60,7 @@ class AuthRepo {
   }
 
   Future updateNotify(notifStatus) async {
-    String url = APIs.updateNotifyEP;
+    String url = APIs.updatenotifyEP;
     Map<String, dynamic> body = {'updatenotify': "$notifStatus"};
     return await APIs.postRequest(url, body);
   }

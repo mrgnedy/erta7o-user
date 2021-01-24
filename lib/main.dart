@@ -1,16 +1,24 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:auto_route/auto_route.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:erta7o/core/utils.dart';
+import 'package:erta7o/data/repository/account_repo.dart';
 import 'package:erta7o/data/repository/order_repo.dart';
 import 'package:erta7o/data/repository/restaurants_repo.dart';
 import 'package:erta7o/presentation/router.gr.dart';
+import 'package:erta7o/presentation/state/account_store.dart';
 import 'package:erta7o/presentation/state/auth_store.dart';
 import 'package:erta7o/presentation/state/order_store.dart';
 import 'package:erta7o/presentation/state/restaurants_store.dart';
+import 'package:erta7o/presentation/state/setting_store.dart';
 import 'package:erta7o/presentation/ui/anim.dart';
 import 'package:erta7o/presentation/ui/authPages/authPage.dart';
 import 'package:erta7o/presentation/ui/authPages/verifyPage.dart';
 import 'package:erta7o/presentation/ui/mainPage/mainPage.dart';
+import 'package:erta7o/presentation/ui/navigationPages/homePage/subWidgets/app_bar.dart';
 import 'package:erta7o/presentation/ui/navigationPages/ordersPage/offers_page.dart';
 import 'package:erta7o/presentation/ui/navigationPages/ordersPage/orderDetails.dart';
 import 'package:erta7o/presentation/ui/navigationPages/ordersPage/all_orders_page.dart/ordersPage.dart';
@@ -18,15 +26,21 @@ import 'package:erta7o/presentation/ui/restaurantDetails/menuPage.dart';
 import 'package:erta7o/presentation/ui/restaurantDetails/restaurantDetails.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 import 'data/repository/auth_repo.dart';
+import 'data/repository/setting_repo.dart';
 import 'generated/codegen_loader.g.dart';
 import 'presentation/ui/authPages/forget_password.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
+  // WidgetsBinding.;
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -40,50 +54,59 @@ class MyApp extends StatelessWidget {
       child: Injector(
           inject: [
             Inject(() => AuthStore(AuthRepo()), isLazy: false),
+            Inject(() => SettingStore(SettingRepo()), isLazy: false),
             Inject(() => RestaurantsStore(RestaurantsRepo()), isLazy: false),
             Inject(() => OrderStore(OrderRepo()), isLazy: false),
+            Inject(() => HomeAppBarStore()),
+            Inject(() => AccountStore(AccountRepo())),
           ],
           builder: (context) {
-            return MaterialApp(
-                supportedLocales: EasyLocalization.of(context).supportedLocales,
-                locale: EasyLocalization.of(context).locale,
-                localizationsDelegates: [
-                  EasyLocalization.of(context).delegate,
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate
-                ],
-                title: 'إرتاحوا',
-                theme: ThemeData(
-                  textTheme: TextTheme(
-                    body1: TextStyle(color: Colors.white, fontFamily: 'bein'),
-                    caption: TextStyle(color: Colors.white.withOpacity(0.5)),
-                    subhead: TextStyle(color: Colors.white, fontFamily: 'bein'),
-                    body2: TextStyle(color: Colors.white, fontFamily: 'bein'),
-                    display1:
-                        TextStyle(color: Colors.white, fontFamily: 'bein'),
-                    display2:
-                        TextStyle(color: Colors.white, fontFamily: 'bein'),
-                    display3:
-                        TextStyle(color: Colors.white, fontFamily: 'bein'),
-                    display4:
-                        TextStyle(color: Colors.white, fontFamily: 'bein'),
-                    title: TextStyle(color: Colors.white, fontFamily: 'bein'),
-                    subtitle:
-                        TextStyle(color: Colors.white, fontFamily: 'bein'),
-                    button: TextStyle(color: Colors.white, fontFamily: 'bein'),
-                    headline:
-                        TextStyle(color: Colors.white, fontFamily: 'bein'),
-                    overline:
-                        TextStyle(color: Colors.white, fontFamily: 'bein'),
+            return  MaterialApp(
+                debugShowCheckedModeBanner: false,
+                  supportedLocales:
+                      EasyLocalization.of(context).supportedLocales,
+                  locale: EasyLocalization.of(context).locale,
+                  localizationsDelegates: [
+                    EasyLocalization.of(context).delegate,
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate
+                  ],
+                  title: 'إرتاحوا',
+                  theme: ThemeData(
+                    fontFamily: 'bein',
+                    textTheme: TextTheme(
+                      body1: TextStyle(color: Colors.white, fontFamily: 'bein'),
+                      caption: TextStyle(color: Colors.white.withOpacity(0.5)),
+                      subhead:
+                          TextStyle(color: Colors.white, fontFamily: 'bein'),
+                      body2: TextStyle(color: Colors.white, fontFamily: 'bein'),
+                      display1:
+                          TextStyle(color: Colors.white, fontFamily: 'bein'),
+                      display2:
+                          TextStyle(color: Colors.white, fontFamily: 'bein'),
+                      display3:
+                          TextStyle(color: Colors.white, fontFamily: 'bein'),
+                      display4:
+                          TextStyle(color: Colors.white, fontFamily: 'bein'),
+                      title: TextStyle(color: Colors.white, fontFamily: 'bein'),
+                      subtitle:
+                          TextStyle(color: Colors.white, fontFamily: 'bein'),
+                      button:
+                          TextStyle(color: Colors.white, fontFamily: 'bein'),
+                      headline:
+                          TextStyle(color: Colors.white, fontFamily: 'bein'),
+                      overline:
+                          TextStyle(color: Colors.white, fontFamily: 'bein'),
+                    ),
+                    scaffoldBackgroundColor: ColorsD.main,
+                    appBarTheme: AppBarTheme(color: ColorsD.main),
+                    primarySwatch: Colors.blue,
                   ),
-                  scaffoldBackgroundColor: ColorsD.main,
-                  appBarTheme: AppBarTheme(color: ColorsD.main),
-                  primarySwatch: Colors.blue,
-                ),
-                builder: ExtendedNavigator<Router>(router: Router()),
-                home: ForgetPassword()
-                //RestaurantDetails(restaurantData: RestaurantData(),),
-                );
+                  builder: ExtendedNavigator<Router>(router: Router()),
+                  home: ForgetPassword()
+                  //RestaurantDetails(restaurantData: RestaurantData(),),
+                  );
+         
           }),
     );
   }
